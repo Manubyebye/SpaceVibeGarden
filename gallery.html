@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Gallery - Space Vibe Garden</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/css/lightgallery-bundle.min.css">
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🌱</span>
+                <span class="logo-text">Space Vibe Garden</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About Us</a></li>
+                <li><a href="index.html#strains" class="nav-link">Strains</a></li>
+                <li><a href="gallery.html" class="nav-link active">Gallery</a></li>
+                <li><a href="blog.html" class="nav-link">Blog</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Gallery Hero Section -->
+    <section class="gallery-hero-section">
+        <div class="gallery-hero-overlay">
+            <div class="container">
+                <div class="gallery-hero-content">
+                    <h1 class="gallery-hero-title">Full <span class="highlight">Gallery</span></h1>
+                    <p class="gallery-hero-subtitle">Complete visual journey of our cultivation process</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Filter Section -->
+    <section class="section dark-section">
+        <div class="container">
+            <div class="gallery-filters">
+                <button class="filter-btn active" data-filter="all">All Media</button>
+                <button class="filter-btn" data-filter="germination">Germination</button>
+                <button class="filter-btn" data-filter="vegetative">Vegetative</button>
+                <button class="filter-btn" data-filter="flowering">Flowering</button>
+                <button class="filter-btn" data-filter="harvest">Harvest</button>
+                <button class="filter-btn" data-filter="videos">Videos</button>
+            </div>
+            
+            <div class="gallery-search">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search gallery..." id="gallery-search">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Full Gallery Grid -->
+    <section class="section">
+        <div class="container">
+            <div id="full-gallery" class="full-gallery-grid">
+                <!-- Germination Images -->
+                <div class="gallery-media-item germination" data-src="img/germ1-full.jpg">
+                    <div class="media-container">
+                        <img src="img/germ1.jpg" alt="Premium seed selection">
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Premium Seed Selection</h3>
+                                <p>Germination Phase</p>
+                                <div class="media-icons">
+                                    <i class="fas fa-expand"></i>
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-media-item germination" data-src="img/germ2-full.jpg">
+                    <div class="media-container">
+                        <img src="img/germ2.jpg" alt="Germination setup">
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Paper Towel Method</h3>
+                                <p>Germination Phase</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-media-item germination" data-src="img/germ3-full.jpg">
+                    <div class="media-container">
+                        <img src="img/germ3.jpg" alt="First roots">
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>First Visible Roots</h3>
+                                <p>Germination Phase</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vegetative Images -->
+                <div class="gallery-media-item vegetative" data-src="img/veg1-full.jpg">
+                    <div class="media-container">
+                        <img src="img/veg1.jpg" alt="Early vegetative">
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Early Vegetative Growth</h3>
+                                <p>Vegetative Phase</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-media-item vegetative" data-src="img/veg2-full.jpg">
+                    <div class="media-container">
+                        <img src="img/veg2.jpg" alt="Vegetative development">
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Active Vegetative Phase</h3>
+                                <p>Vegetative Phase</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-media-item vegetative" data-src="img/veg3-full.jpg">
+                    <div class="media-container">
+                        <img src="img/veg3.jpg" alt="Training plants">
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Low Stress Training</h3>
+                                <p>Vegetative Phase</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flowering Images -->
+                <div class="gallery-media-item flowering" data-src="img/flower1-full.jpg">
+                    <div class="media-container">
+                        <img src="img/flower1.jpg" alt="Early flowering">
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Early Flowering Stage</h3>
+                                <p>Flowering Phase</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-media-item flowering" data-src="img/flower2-full.jpg">
+                    <div class="media-container">
+                        <img src="img/flower2.jpg" alt="Bud development">
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Bud Development Begins</h3>
+                                <p>Flowering Phase</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-media-item flowering" data-src="img/flower3-full.jpg">
+                    <div class="media-container">
+                        <img src="img/flower3.jpg" alt="Mid flowering">
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Mid Flowering Phase</h3>
+                                <p>Flowering Phase</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Harvest Images -->
+                <div class="gallery-media-item harvest" data-src="img/harvest1-full.jpg">
+                    <div class="media-container">
+                        <img src="img/harvest1.jpg" alt="Harvest time">
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Harvest Day</h3>
+                                <p>Harvest Phase</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-media-item harvest" data-src="img/harvest2-full.jpg">
+                    <div class="media-container">
+                        <img src="img/harvest2.jpg" alt="Trimming buds">
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Trimming Harvested Buds</h3>
+                                <p>Harvest Phase</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-media-item harvest" data-src="img/harvest3-full.jpg">
+                    <div class="media-container">
+                        <img src="img/harvest3.jpg" alt="Drying room">
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Drying Room Setup</h3>
+                                <p>Harvest Phase</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Videos -->
+                <div class="gallery-media-item videos" data-type="video" data-src="videos/germination-timelapse.mp4">
+                    <div class="media-container">
+                        <div class="video-thumbnail">
+                            <img src="img/video-thumb1.jpg" alt="Germination Timelapse">
+                            <div class="video-play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Germination Timelapse</h3>
+                                <p>Video - 2:45 min</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-media-item videos" data-type="video" data-src="videos/vegetative-growth.mp4">
+                    <div class="media-container">
+                        <div class="video-thumbnail">
+                            <img src="img/video-thumb2.jpg" alt="Vegetative Growth">
+                            <div class="video-play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Vegetative Growth</h3>
+                                <p>Video - 3:20 min</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-media-item videos" data-type="video" data-src="videos/flowering-bloom.mp4">
+                    <div class="media-container">
+                        <div class="video-thumbnail">
+                            <img src="img/video-thumb3.jpg" alt="Flowering Bloom">
+                            <div class="video-play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="media-overlay">
+                            <div class="media-info">
+                                <h3>Flowering Bloom</h3>
+                                <p>Video - 4:15 min</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- More images (total 36 items for demonstration) -->
+                <!-- Additional items would continue here following the same pattern -->
+                
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-gallery">
+                <button class="btn-secondary" id="load-more-media">Load More Media</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div id="media-lightbox" class="media-lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close">&times;</button>
+            <button class="lightbox-prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="lightbox-next"><i class="fas fa-chevron-right"></i></button>
+            <div class="lightbox-media-container">
+                <!-- Media will be inserted here dynamically -->
+            </div>
+            <div class="lightbox-info">
+                <h3 id="lightbox-title">Media Title</h3>
+                <p id="lightbox-description">Media description goes here</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-icon">🌱 Space Vibe Garden</span>
+                    <p>Professional Cannabis Cultivation</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h4>Follow Our Journey</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Space Vibe Garden. All rights reserved. | Legal cultivation in the Czech Republic</p>
+                <p class="disclaimer">This website is for educational purposes only. All cultivation is done in compliance with Czech law.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/lightgallery.min.js"></script>
+    <script src="script.js"></script>
+    <script src="gallery-script.js"></script>
+</body>
+</html>
