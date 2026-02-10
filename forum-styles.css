@@ -878,3 +878,233 @@
         margin: 20px;
     }
 }
+
+
+
+/* Leaf Animation Styles */
+.leaf-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.leaf {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,10 C70,10 85,25 85,45 C85,65 65,85 50,95 C35,85 15,65 15,45 C15,25 30,10 50,10 Z" fill="%234CAF50" opacity="0.7"/><path d="M50,10 C45,15 40,25 38,35 C36,45 38,55 42,65 C46,75 52,82 58,88" stroke="%232E7D32" stroke-width="2" fill="none"/><path d="M50,10 C55,15 60,25 62,35 C64,45 62,55 58,65 C54,75 48,82 42,88" stroke="%232E7D32" stroke-width="2" fill="none"/><path d="M50,30 C48,35 47,40 47,45 C47,50 48,55 50,60" stroke="%232E7D32" stroke-width="2" fill="none"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    opacity: 0;
+    animation: leafFall linear infinite;
+}
+
+.leaf:nth-child(1) {
+    width: 30px;
+    height: 30px;
+    left: 10%;
+    animation-delay: 0s;
+    animation-duration: 25s;
+}
+
+.leaf:nth-child(2) {
+    width: 35px;
+    height: 35px;
+    left: 20%;
+    animation-delay: 2s;
+    animation-duration: 20s;
+}
+
+.leaf:nth-child(3) {
+    width: 40px;
+    height: 40px;
+    left: 30%;
+    animation-delay: 5s;
+    animation-duration: 22s;
+}
+
+.leaf:nth-child(4) {
+    width: 25px;
+    height: 25px;
+    left: 40%;
+    animation-delay: 8s;
+    animation-duration: 18s;
+}
+
+.leaf:nth-child(5) {
+    width: 35px;
+    height: 35px;
+    left: 50%;
+    animation-delay: 11s;
+    animation-duration: 21s;
+}
+
+.leaf:nth-child(6) {
+    width: 30px;
+    height: 30px;
+    left: 60%;
+    animation-delay: 14s;
+    animation-duration: 19s;
+}
+
+.leaf:nth-child(7) {
+    width: 40px;
+    height: 40px;
+    left: 70%;
+    animation-delay: 17s;
+    animation-duration: 23s;
+}
+
+.leaf:nth-child(8) {
+    width: 35px;
+    height: 35px;
+    left: 80%;
+    animation-delay: 20s;
+    animation-duration: 17s;
+}
+
+.leaf:nth-child(9) {
+    width: 30px;
+    height: 30px;
+    left: 90%;
+    animation-delay: 23s;
+    animation-duration: 20s;
+}
+
+.leaf:nth-child(10) {
+    width: 25px;
+    height: 25px;
+    left: 15%;
+    animation-delay: 26s;
+    animation-duration: 24s;
+}
+
+@keyframes leafFall {
+    0% {
+        transform: translateY(-100px) translateX(0px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    90% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(calc(100vh + 100px)) translateX(200px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Random swaying animation for some leaves */
+.leaf.swing {
+    animation-name: leafFallSway;
+}
+
+@keyframes leafFallSway {
+    0% {
+        transform: translateY(-100px) translateX(0px) rotate(0deg);
+        opacity: 0;
+    }
+    20% {
+        transform: translateY(20vh) translateX(50px) rotate(90deg);
+    }
+    40% {
+        transform: translateY(40vh) translateX(-30px) rotate(180deg);
+    }
+    60% {
+        transform: translateY(60vh) translateX(70px) rotate(270deg);
+    }
+    80% {
+        transform: translateY(80vh) translateX(-20px) rotate(340deg);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(calc(100vh + 100px)) translateX(100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* For different leaf colors */
+.leaf.green {
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) hue-rotate(0deg);
+}
+
+.leaf.light-green {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,10 C70,10 85,25 85,45 C85,65 65,85 50,95 C35,85 15,65 15,45 C15,25 30,10 50,10 Z" fill="%238BC34A" opacity="0.7"/><path d="M50,10 C45,15 40,25 38,35 C36,45 38,55 42,65 C46,75 52,82 58,88" stroke="%234CAF50" stroke-width="2" fill="none"/><path d="M50,10 C55,15 60,25 62,35 C64,45 62,55 58,65 C54,75 48,82 42,88" stroke="%234CAF50" stroke-width="2" fill="none"/><path d="M50,30 C48,35 47,40 47,45 C47,50 48,55 50,60" stroke="%234CAF50" stroke-width="2" fill="none"/></svg>');
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) hue-rotate(20deg);
+}
+
+.leaf.dark-green {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,10 C70,10 85,25 85,45 C85,65 65,85 50,95 C35,85 15,65 15,45 C15,25 30,10 50,10 Z" fill="%232E7D32" opacity="0.7"/><path d="M50,10 C45,15 40,25 38,35 C36,45 38,55 42,65 C46,75 52,82 58,88" stroke="%231B5E20" stroke-width="2" fill="none"/><path d="M50,10 C55,15 60,25 62,35 C64,45 62,55 58,65 C54,75 48,82 42,88" stroke="%231B5E20" stroke-width="2" fill="none"/><path d="M50,30 C48,35 47,40 47,45 C47,50 48,55 50,60" stroke="%231B5E20" stroke-width="2" fill="none"/></svg>');
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) hue-rotate(-20deg);
+}
+
+/* Leaf interaction on hover */
+.leaf:hover {
+    animation-play-state: paused;
+    transform: scale(1.2);
+    filter: drop-shadow(0 4px 8px rgba(76, 175, 80, 0.5)) brightness(1.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .leaf {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .leaf:nth-child(1),
+    .leaf:nth-child(2),
+    .leaf:nth-child(3),
+    .leaf:nth-child(4),
+    .leaf:nth-child(5),
+    .leaf:nth-child(6),
+    .leaf:nth-child(7),
+    .leaf:nth-child(8),
+    .leaf:nth-child(9),
+    .leaf:nth-child(10) {
+        width: 20px;
+        height: 20px;
+    }
+    
+    @keyframes leafFall {
+        100% {
+            transform: translateY(calc(100vh + 100px)) translateX(100px) rotate(360deg);
+        }
+    }
+}
+
+/* Add to your existing CSS */
+.leaf {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Reduce animation on mobile to save battery */
+@media (max-width: 768px) {
+    .leaf {
+        animation-duration: 30s !important; /* Slower on mobile */
+    }
+    
+    /* Reduce number of leaves on mobile */
+    .leaf:nth-child(n+8) {
+        display: none;
+    }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .leaf {
+        animation: none;
+        opacity: 0.3;
+    }
+}
