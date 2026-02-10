@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Vibe Garden Forum Greedit- Cannabis Cultivation Community</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+    <link rel="stylesheet" href="forum-styles.css">
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🌱</span>
+                <span class="logo-text">Space Vibe Garden</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About Us</a></li>
+                <li><a href="index.html#strains" class="nav-link">Strains</a></li>
+                <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+                <li><a href="forum.html" class="nav-link active">Forum</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login/Register Modal -->
+    <div id="auth-modal" class="auth-modal">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h2 id="auth-title">Login to Greedit</h2>
+                <button class="auth-close">&times;</button>
+            </div>
+            <div class="auth-modal-body">
+                <div id="login-form" class="auth-form active">
+                    <div class="form-group">
+                        <input type="email" id="login-email" placeholder="Email address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="login-password" placeholder="Password" required>
+                    </div>
+                    <div class="form-group remember">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">Remember me</label>
+                    </div>
+                    <button id="login-btn" class="btn-primary btn-full">Login</button>
+                    <div class="auth-divider">
+                        <span>or</span>
+                    </div>
+                    <button id="show-register" class="btn-secondary btn-full">Create New Account</button>
+                    <p class="auth-note">By logging in, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a></p>
+                </div>
+                
+                <div id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <input type="text" id="register-username" placeholder="Choose a username" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="register-email" placeholder="Email address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="register-password" placeholder="Create password" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="register-confirm" placeholder="Confirm password" required>
+                    </div>
+                    <div class="form-group remember">
+                        <input type="checkbox" id="agree-terms" required>
+                        <label for="agree-terms">I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
+                    </div>
+                    <button id="register-btn" class="btn-primary btn-full">Create Account</button>
+                    <div class="auth-divider">
+                        <span>or</span>
+                    </div>
+                    <button id="show-login" class="btn-secondary btn-full">Already have an account? Login</button>
+                </div>
+                
+                <div id="auth-success" class="auth-success">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 id="success-message">Login Successful!</h3>
+                    <p id="success-detail">Welcome back to the community</p>
+                    <button id="continue-btn" class="btn-primary btn-full">Continue to Forum</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forum Hero Section -->
+    <section class="forum-hero-section">
+        <div class="forum-hero-overlay">
+            <div class="container">
+                <div class="forum-hero-content">
+                    <h1 class="forum-hero-title">Cannabis <span class="highlight">Growers</span> Forum Greedit</h1>
+                    <p class="forum-hero-subtitle">Share experiences, ask questions, and connect with fellow cultivators</p>
+                    <div id="user-welcome" class="user-welcome">
+                        <p>Welcome to our community! <a href="#" id="open-login">Login</a> or <a href="#" id="open-register">Register</a> to join the discussion.</p>
+                    </div>
+                    <div id="logged-in-user" class="logged-in-user" style="display: none;">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <h3 id="username-display">Username</h3>
+                                <button id="logout-btn" class="btn-secondary btn-small">Logout</button>
+                            </div>
+                        </div>
+                        <button id="create-post-btn" class="btn-primary">
+                            <i class="fas fa-plus"></i> Create Post
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Create Post Modal -->
+    <div id="create-post-modal" class="create-post-modal">
+        <div class="create-post-content">
+            <div class="create-post-header">
+                <h2>Create New Post</h2>
+                <button class="create-post-close">&times;</button>
+            </div>
+            <div class="create-post-body">
+                <div class="form-group">
+                    <input type="text" id="post-title" placeholder="Post Title" required>
+                </div>
+                <div class="form-group">
+                    <select id="post-category">
+                        <option value="">Select Category</option>
+                        <option value="germination">Germination</option>
+                        <option value="vegetative">Vegetative Stage</option>
+                        <option value="flowering">Flowering Stage</option>
+                        <option value="harvest">Harvest & Curing</option>
+                        <option value="equipment">Equipment & Setup</option>
+                        <option value="problems">Problem Solving</option>
+                        <option value="strains">Strains & Genetics</option>
+                        <option value="general">General Discussion</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <textarea id="post-content" placeholder="What would you like to share? (Markdown supported)" rows="8" required></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="post-tags" placeholder="Add tags (separate by commas)">
+                </div>
+                <div class="create-post-actions">
+                    <button id="cancel-post" class="btn-secondary">Cancel</button>
+                    <button id="submit-post" class="btn-primary">Post to Forum</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Forum Content -->
+    <section class="section">
+        <div class="container">
+            <div class="forum-layout">
+                <!-- Sidebar -->
+                <div class="forum-sidebar">
+                    <div class="sidebar-section">
+                        <h3><i class="fas fa-fire"></i> Trending Now</h3>
+                        <ul class="trending-list">
+                            <li><a href="#"><i class="fas fa-arrow-up"></i> Best nutrients for flowering stage</a></li>
+                            <li><a href="#"><i class="fas fa-arrow-up"></i> LED vs HPS lighting comparison</a></li>
+                            <li><a href="#"><i class="fas fa-arrow-up"></i> How to deal with spider mites</a></li>
+                            <li><a href="#"><i class="fas fa-arrow-up"></i> My first grow journal - Apple Fritter</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sidebar-section">
+                        <h3><i class="fas fa-tags"></i> Categories</h3>
+                        <ul class="category-list">
+                            <li><a href="#" data-category="all" class="active"><i class="fas fa-layer-group"></i> All Posts</a></li>
+                            <li><a href="#" data-category="germination"><i class="fas fa-seedling"></i> Germination</a></li>
+                            <li><a href="#" data-category="vegetative"><i class="fas fa-leaf"></i> Vegetative</a></li>
+                            <li><a href="#" data-category="flowering"><i class="fas fa-cannabis"></i> Flowering</a></li>
+                            <li><a href="#" data-category="harvest"><i class="fas fa-cut"></i> Harvest</a></li>
+                            <li><a href="#" data-category="equipment"><i class="fas fa-tools"></i> Equipment</a></li>
+                            <li><a href="#" data-category="problems"><i class="fas fa-question-circle"></i> Problems</a></li>
+                            <li><a href="#" data-category="strains"><i class="fas fa-dna"></i> Strains</a></li>
+                            <li><a href="#" data-category="general"><i class="fas fa-comments"></i> General</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sidebar-section">
+                        <h3><i class="fas fa-chart-line"></i> Forum Stats</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number" id="total-posts">0</span>
+                                <span class="stat-label">Posts</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="total-users">0</span>
+                                <span class="stat-label">Users</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="total-comments">0</span>
+                                <span class="stat-label">Comments</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">24h</span>
+                                <span class="stat-label">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-section rules">
+                        <h3><i class="fas fa-gavel"></i> Community Rules</h3>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Be respectful to others</li>
+                            <li><i class="fas fa-check-circle"></i> No illegal activity discussion</li>
+                            <li><i class="fas fa-check-circle"></i> Share knowledge, not misinformation</li>
+                            <li><i class="fas fa-check-circle"></i> Keep discussions cultivation-focused</li>
+                            <li><i class="fas fa-check-circle"></i> No commercial advertising</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="forum-main">
+                    <!-- Forum Filters -->
+                    <div class="forum-filters">
+                        <div class="filter-options">
+                            <button class="filter-btn active" data-filter="newest">Newest</button>
+                            <button class="filter-btn" data-filter="popular">Popular</button>
+                            <button class="filter-btn" data-filter="trending">Trending</button>
+                            <button class="filter-btn" data-filter="unanswered">Unanswered</button>
+                        </div>
+                        <div class="forum-search">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Search forum..." id="forum-search">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Posts Container -->
+                    <div id="posts-container" class="posts-container">
+                        <!-- Posts will be loaded here dynamically -->
+                        <div class="loading-posts">
+                            <div class="loading-spinner">
+                                <i class="fas fa-cannabis fa-spin"></i>
+                            </div>
+                            <p>Loading forum posts...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div id="empty-state" class="empty-state" style="display: none;">
+                        <i class="fas fa-comment-slash"></i>
+                        <h3>No posts found</h3>
+                        <p>Be the first to start a discussion in this category!</p>
+                    </div>
+                    
+                    <!-- Load More -->
+                    <div class="load-more-container" style="display: none;">
+                        <button id="load-more-posts" class="btn-secondary">Load More Posts</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Post Detail Modal -->
+    <div id="post-detail-modal" class="post-detail-modal">
+        <div class="post-detail-content">
+            <div class="post-detail-header">
+                <button class="post-detail-close">&times;</button>
+            </div>
+            <div class="post-detail-body">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-icon">🌱 Space Vibe Garden</span>
+                    <p>Professional Cannabis Cultivation</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="forum.html">Forum</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h4>Follow Our Journey</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Space Vibe Garden. All rights reserved. | Legal cultivation in the Czech Republic</p>
+                <p class="disclaimer">This website and forum are for educational purposes only. All cultivation is done in compliance with Czech law.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
+    <script src="forum-script.js"></script>
+</body>
+</html>
