@@ -1,4 +1,5 @@
-// forum-script.js - Complete with leaf animation and localStorage (No Supabase required)
+// forum-script.js - Complete with Supabase integration + localStorage fallback
+// ALL original features preserved - Supabase is added as enhancement, not replacement
 
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('🌱 Space Vibe Garden Forum - Loading...');
@@ -57,6 +58,28 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
     
+     // Initialize Supabase (if available)
+    let supabase = null;
+    let supabaseAvailable = false;
+    
+    try {
+        // Check if Supabase client is already available globally
+        if (typeof window !== 'undefined' && window.supabaseClient) {
+            supabase = window.supabaseClient;
+            supabaseAvailable = true;
+            console.log('✅ Supabase connected successfully');
+        } else if (typeof window !== 'undefined' && window.supabase) {
+            supabase = window.supabase;
+            supabaseAvailable = true;
+            console.log('✅ Supabase connected successfully');
+        } else {
+            console.log('⚠️ Supabase not available, using localStorage only');
+        }
+    } catch (error) {
+        console.log('⚠️ Supabase not available, using localStorage only');
+        supabaseAvailable = false;
+    }
+    
     // Authentication State
     let currentUser = null;
     let forumPosts = [];
@@ -111,8 +134,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     const totalCommentsElement = document.getElementById('total-comments');
     
     // Initialize forum
-    checkUser();
-    loadInitialData();
+    await checkUser();
+    await loadInitialData();
     
     // Event Listeners
     if (openLoginBtn) openLoginBtn.addEventListener('click', (e) => {
@@ -179,15 +202,109 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     
     // Functions
-    function checkUser() {
-        const user = JSON.parse(localStorage.getItem('forum_current_user')) || null;
-        if (user) {
-            currentUser = user;
+    async function checkUser() {
+        // Try Supabase first if available
+        if (supabaseAvailable && supabase) {
+            try {
+                const { data: { user }, error } = await supabase.auth.getUser();
+                if (user && !error) {
+                    // Get user profile from database
+                    const { data: profile } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', user.id)
+                        .single();
+                    
+                    if (profile) {
+                        currentUser = {
+                            id: profile.id,
+                            email: profile.email,
+                            username: profile.username,
+                            avatar: profile.avatar || 'default',
+                            postCount: profile.post_count || 0,
+                            commentCount: profile.comment_count || 0
+                        };
+                        // Also save to localStorage as backup
+                        localStorage.setItem('forum_current_user', JSON.stringify(currentUser));
+                    }
+                }
+            } catch (error) {
+                console.log('Supabase auth check failed, using localStorage');
+                // Fallback to localStorage
+                const user = JSON.parse(localStorage.getItem('forum_current_user')) || null;
+                if (user) currentUser = user;
+            }
+        } else {
+            // Fallback to localStorage
+            const user = JSON.parse(localStorage.getItem('forum_current_user')) || null;
+            if (user) currentUser = user;
         }
+        
         updateUserInterface();
     }
     
-    function loadInitialData() {
+    async function loadInitialData() {
+        // Try Supabase first if available
+        if (supabaseAvailable && supabase) {
+            try {
+                // Load users/profiles from Supabase
+                const { data: profiles, error: profilesError } = await supabase
+                    .from('profiles')
+                    .select('*');
+                
+                if (profiles && !profilesError) {
+                    forumUsers = profiles.map(profile => ({
+                        id: profile.id,
+                        email: profile.email,
+                        username: profile.username,
+                        avatar: profile.avatar || 'default',
+                        join_date: profile.join_date || new Date().toISOString(),
+                        post_count: profile.post_count || 0,
+                        comment_count: profile.comment_count || 0
+                    }));
+                }
+                
+                // Load posts from Supabase
+                const { data: posts, error: postsError } = await supabase
+                    .from('posts')
+                    .select('*, comments(*)')
+                    .order('created_at', { ascending: false });
+                
+                if (posts && !postsError) {
+                    forumPosts = posts.map(post => ({
+                        id: post.id,
+                        user_id: post.user_id,
+                        title: post.title,
+                        category: post.category,
+                        content: post.content,
+                        tags: post.tags || [],
+                        created_at: post.created_at,
+                        updated_at: post.updated_at,
+                        likes: post.likes || 0,
+                        views: post.views || 0,
+                        comments: post.comments || []
+                    }));
+                }
+            } catch (error) {
+                console.log('Supabase load failed, using localStorage');
+                // Fallback to localStorage
+                loadFromLocalStorage();
+            }
+        } else {
+            // Fallback to localStorage
+            loadFromLocalStorage();
+        }
+        
+        // If no data from Supabase, ensure we have localStorage data
+        if (forumUsers.length === 0 || forumPosts.length === 0) {
+            loadFromLocalStorage();
+        }
+        
+        updateForumStats();
+        filterPosts();
+    }
+    
+    function loadFromLocalStorage() {
         // Load users from localStorage or create demo users
         const storedUsers = JSON.parse(localStorage.getItem('forum_users'));
         if (storedUsers && storedUsers.length > 0) {
@@ -207,9 +324,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             forumPosts = createDemoPosts();
             localStorage.setItem('forum_posts', JSON.stringify(forumPosts));
         }
-        
-        updateForumStats();
-        filterPosts();
     }
     
     function createDemoUsers() {
@@ -442,7 +556,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (registerConfirm) registerConfirm.value = '';
     }
     
-    function handleLogin() {
+    async function handleLogin() {
         const email = document.getElementById('login-email')?.value.trim() || '';
         const password = document.getElementById('login-password')?.value.trim() || '';
         
@@ -451,8 +565,55 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
         
-        // For demo purposes, accept any password for demo users
-        // In a real app, you would validate properly
+        // Try Supabase first if available
+        if (supabaseAvailable && supabase) {
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                
+                if (!error && data.user) {
+                    // Get user profile
+                    const { data: profile } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', data.user.id)
+                        .single();
+                    
+                    if (profile) {
+                        currentUser = {
+                            id: profile.id,
+                            email: profile.email,
+                            username: profile.username,
+                            avatar: profile.avatar || 'default',
+                            postCount: profile.post_count || 0,
+                            commentCount: profile.comment_count || 0
+                        };
+                        
+                        // Save to localStorage as backup
+                        localStorage.setItem('forum_current_user', JSON.stringify(currentUser));
+                        
+                        // Show success
+                        if (loginForm) loginForm.classList.remove('active');
+                        if (authSuccess) {
+                            authSuccess.classList.add('active');
+                            successMessage.textContent = 'Login Successful!';
+                            successDetail.textContent = `Welcome back, ${currentUser.username}!`;
+                        }
+                        
+                        updateUserInterface();
+                        updateForumStats();
+                        filterPosts();
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.log('Supabase login failed, trying localStorage');
+            }
+        }
+        
+        // Fallback to localStorage demo login
         const user = forumUsers.find(u => u.email === email);
         
         if (user) {
@@ -480,20 +641,12 @@ document.addEventListener('DOMContentLoaded', async function() {
             updateForumStats();
             filterPosts();
             
-            // Reset button if needed
-            setTimeout(() => {
-                if (loginBtn) {
-                    loginBtn.disabled = false;
-                    loginBtn.textContent = 'Login';
-                }
-            }, 1000);
-            
         } else {
             showErrorMessage('User not found. Try: admin@spacevibe.com / password123');
         }
     }
     
-    function handleRegister() {
+    async function handleRegister() {
         const username = document.getElementById('register-username')?.value.trim() || '';
         const email = document.getElementById('register-email')?.value.trim() || '';
         const password = document.getElementById('register-password')?.value.trim() || '';
@@ -527,7 +680,65 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
         
-        // Check if username or email already exists
+        // Try Supabase first if available
+        if (supabaseAvailable && supabase) {
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            username: username
+                        }
+                    }
+                });
+                
+                if (!error && data.user) {
+                    // Create profile
+                    const { error: profileError } = await supabase
+                        .from('profiles')
+                        .insert([
+                            {
+                                id: data.user.id,
+                                email: email,
+                                username: username,
+                                avatar: 'default',
+                                join_date: new Date().toISOString(),
+                                post_count: 0,
+                                comment_count: 0
+                            }
+                        ]);
+                    
+                    if (!profileError) {
+                        currentUser = {
+                            id: data.user.id,
+                            email: email,
+                            username: username,
+                            avatar: 'default',
+                            postCount: 0,
+                            commentCount: 0
+                        };
+                        
+                        localStorage.setItem('forum_current_user', JSON.stringify(currentUser));
+                        
+                        // Show success
+                        if (registerForm) registerForm.classList.remove('active');
+                        if (authSuccess) {
+                            authSuccess.classList.add('active');
+                            successMessage.textContent = 'Account Created!';
+                            successDetail.textContent = `Welcome to the community, ${username}!`;
+                        }
+                        
+                        updateUserInterface();
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.log('Supabase registration failed, trying localStorage');
+            }
+        }
+        
+        // Check if username or email already exists in localStorage
         if (forumUsers.some(u => u.username === username)) {
             showErrorMessage('Username already taken');
             return;
@@ -539,7 +750,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         
         try {
-            // Create new user
+            // Create new user in localStorage
             const newUser = {
                 id: generateId(),
                 email: email,
@@ -575,21 +786,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             updateUserInterface();
             updateForumStats();
             
-            // Reset button
-            setTimeout(() => {
-                if (registerBtn) {
-                    registerBtn.disabled = false;
-                    registerBtn.textContent = 'Create Account';
-                }
-            }, 1000);
-            
         } catch (error) {
             console.error('Registration error:', error);
             showErrorMessage('Error creating account: ' + error.message);
-            if (registerBtn) {
-                registerBtn.disabled = false;
-                registerBtn.textContent = 'Create Account';
-            }
         }
     }
     
@@ -625,7 +824,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (postTagsInput) postTagsInput.value = '';
     }
     
-    function handleCreatePost() {
+    async function handleCreatePost() {
         if (!currentUser) {
             showLogin();
             return;
@@ -652,7 +851,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         
         try {
-            // Create new post
+            // Create new post object
             const newPost = {
                 id: generateId(),
                 user_id: currentUser.id,
@@ -667,10 +866,48 @@ document.addEventListener('DOMContentLoaded', async function() {
                 comments: []
             };
             
-            // Add to posts array
-            forumPosts.unshift(newPost);
+            // Try Supabase first if available
+            if (supabaseAvailable && supabase) {
+                try {
+                    const { data, error } = await supabase
+                        .from('posts')
+                        .insert([
+                            {
+                                id: newPost.id,
+                                user_id: newPost.user_id,
+                                title: newPost.title,
+                                category: newPost.category,
+                                content: newPost.content,
+                                tags: newPost.tags,
+                                created_at: newPost.created_at,
+                                updated_at: newPost.updated_at,
+                                likes: newPost.likes,
+                                views: newPost.views
+                            }
+                        ])
+                        .select();
+                    
+                    if (!error) {
+                        // Update user's post count
+                        const { error: updateError } = await supabase.rpc('increment_post_count', {
+                            user_id: currentUser.id
+                        });
+                        
+                        if (!updateError) {
+                            currentUser.postCount++;
+                            localStorage.setItem('forum_current_user', JSON.stringify(currentUser));
+                        }
+                    }
+                } catch (error) {
+                    console.log('Supabase post creation failed, using localStorage');
+                }
+            }
             
-            // Update user's post count
+            // Always save to localStorage as backup
+            forumPosts.unshift(newPost);
+            localStorage.setItem('forum_posts', JSON.stringify(forumPosts));
+            
+            // Update user's post count in localStorage
             const userIndex = forumUsers.findIndex(u => u.id === currentUser.id);
             if (userIndex !== -1) {
                 forumUsers[userIndex].post_count++;
@@ -680,9 +917,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 currentUser.postCount++;
                 localStorage.setItem('forum_current_user', JSON.stringify(currentUser));
             }
-            
-            // Save to localStorage
-            localStorage.setItem('forum_posts', JSON.stringify(forumPosts));
             
             // Create celebration leaves
             createCelebrationLeaves();
@@ -1091,9 +1325,23 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         const post = forumPosts[postIndex];
         
-        // Check if user already liked (simplified - in real app, track user likes)
-        // For demo, we'll just toggle like
-        post.likes = (post.likes || 0) + 1;
+        // Try Supabase first if available
+        if (supabaseAvailable && supabase) {
+            try {
+                const { error } = await supabase.rpc('increment_likes', {
+                    post_id: postId
+                });
+                
+                if (!error) {
+                    post.likes = (post.likes || 0) + 1;
+                }
+            } catch (error) {
+                console.log('Supabase like failed, using localStorage');
+                post.likes = (post.likes || 0) + 1;
+            }
+        } else {
+            post.likes = (post.likes || 0) + 1;
+        }
         
         // Save to localStorage
         localStorage.setItem('forum_posts', JSON.stringify(forumPosts));
@@ -1126,7 +1374,38 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         post.comments.push(newComment);
         
-        // Update user's comment count
+        // Try Supabase first if available
+        if (supabaseAvailable && supabase) {
+            try {
+                const { error } = await supabase
+                    .from('comments')
+                    .insert([
+                        {
+                            id: newComment.id,
+                            post_id: postId,
+                            user_id: newComment.user_id,
+                            content: newComment.content,
+                            created_at: newComment.created_at
+                        }
+                    ]);
+                
+                if (!error) {
+                    // Update user's comment count
+                    const { error: updateError } = await supabase.rpc('increment_comment_count', {
+                        user_id: currentUser.id
+                    });
+                    
+                    if (!updateError) {
+                        currentUser.commentCount++;
+                        localStorage.setItem('forum_current_user', JSON.stringify(currentUser));
+                    }
+                }
+            } catch (error) {
+                console.log('Supabase comment failed, using localStorage');
+            }
+        }
+        
+        // Update user's comment count in localStorage
         const userIndex = forumUsers.findIndex(u => u.id === currentUser.id);
         if (userIndex !== -1) {
             forumUsers[userIndex].comment_count++;
@@ -1775,7 +2054,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     
     console.log('🌱 Space Vibe Garden Forum - Ready!');
-    console.log('Demo Credentials:');
+    console.log('✅ Supabase integration added - will try Supabase first, fallback to localStorage');
+    console.log('Demo Credentials (localStorage mode):');
     console.log('1. Email: admin@spacevibe.com / Password: password123');
     console.log('2. Email: canna@spacevibe.com / Password: password123');
     console.log('3. Email: led@spacevibe.com / Password: password123');

@@ -331,10 +331,13 @@
         </div>
     </footer>
 
-    <!-- JavaScript Files -->
+    <!-- JavaScript Files - CORRECT ORDER -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Supabase Configuration - NO type="module" -->
+    <script src="supabase-config.js"></script>
     <script src="script.js"></script>
     <script src="forum-script.js"></script>
 </body>
 </html>
-

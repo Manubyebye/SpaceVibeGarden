@@ -1108,3 +1108,8 @@
         opacity: 0.3;
     }
 }
+
+/* Fix for missing hero background image */
+.forum-hero-section {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a3a1a 100%) !important;
+}
