@@ -3,40 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Vibe Garden Forum Greedit- Cannabis Cultivation Community</title>
+    <title>Space Vibe Garden Forum - Cannabis Cultivation Community</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
     <link rel="stylesheet" href="forum-styles.css">
 </head>
-<body>
-    <!-- Particle Background -->
-<div id="particles-js"></div>
-
-<!-- Leaf Animation Container -->
-<div id="leaf-container" class="leaf-container"></div>
-
+<body data-theme="dark">
     <!-- Particle Background -->
     <div id="particles-js"></div>
+
+    <!-- Leaf Animation Container -->
+    <div id="leaf-container" class="leaf-container"></div>
     
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <span class="logo-icon">🌱</span>
+                <span class="logo-icon">🌿</span>
                 <span class="logo-text">Space Vibe Garden</span>
             </div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="index.html#about" class="nav-link">About Us</a></li>
-                <li><a href="index.html#strains" class="nav-link">Strains</a></li>
                 <li><a href="gallery.html" class="nav-link">Gallery</a></li>
                 <li><a href="forum.html" class="nav-link active">Forum</a></li>
+                <li><a href="#yield-calculator" class="nav-link" id="calculator-nav">Yield Calc</a></li>
                 <li><a href="index.html#contact" class="nav-link">Contact</a></li>
             </ul>
+            <div class="nav-actions">
+                <button id="theme-toggle" class="theme-toggle" title="Toggle Dark/Light Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="messages-toggle" class="messages-toggle" title="Private Messages">
+                    <i class="fas fa-envelope"></i>
+                    <span id="unread-badge" class="unread-badge" style="display: none;">0</span>
+                </button>
+            </div>
             <div class="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -49,7 +54,7 @@
     <div id="auth-modal" class="auth-modal">
         <div class="auth-modal-content">
             <div class="auth-modal-header">
-                <h2 id="auth-title">Login to Greedit</h2>
+                <h2 id="auth-title">Login to Forum</h2>
                 <button class="auth-close">&times;</button>
             </div>
             <div class="auth-modal-body">
@@ -108,35 +113,303 @@
         </div>
     </div>
 
-    
+    <!-- Messages Modal (Private Messaging) -->
+    <div id="messages-modal" class="messages-modal">
+        <div class="messages-modal-content">
+            <div class="messages-modal-header">
+                <h2><i class="fas fa-envelope"></i> Private Messages</h2>
+                <button class="messages-modal-close">&times;</button>
+            </div>
+            <div class="messages-modal-body">
+                <div class="messages-layout">
+                    <div class="conversations-list">
+                        <div class="conversations-header">
+                            <h3>Conversations</h3>
+                            <button id="new-message-btn" class="btn-primary btn-small">
+                                <i class="fas fa-plus"></i> New
+                            </button>
+                        </div>
+                        <div id="conversations-container" class="conversations-container">
+                            <div class="loading-conversations">
+                                <i class="fas fa-spinner fa-spin"></i> Loading...
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-thread">
+                        <div id="active-conversation-header" class="active-conversation-header" style="display: none;">
+                            <div class="conversation-user-info">
+                                <img id="conversation-avatar" src="" alt="Avatar">
+                                <div>
+                                    <h4 id="conversation-username">Username</h4>
+                                    <span id="conversation-badge" class="user-badge"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="messages-container" class="messages-container">
+                            <div class="no-conversation-selected">
+                                <i class="fas fa-envelope-open"></i>
+                                <h3>Select a conversation</h3>
+                                <p>Choose a user to start messaging</p>
+                            </div>
+                        </div>
+                        <div id="message-input-container" class="message-input-container" style="display: none;">
+                            <textarea id="message-input" placeholder="Type your message..." rows="2"></textarea>
+                            <button id="send-message-btn" class="btn-primary">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Message Modal -->
+    <div id="new-message-modal" class="new-message-modal">
+        <div class="new-message-modal-content">
+            <div class="new-message-modal-header">
+                <h2>New Message</h2>
+                <button class="new-message-modal-close">&times;</button>
+            </div>
+            <div class="new-message-modal-body">
+                <div class="form-group">
+                    <label>To:</label>
+                    <select id="message-recipient" class="user-select">
+                        <option value="">Select a user...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Message:</label>
+                    <textarea id="new-message-content" placeholder="Write your message..." rows="5"></textarea>
+                </div>
+                <div class="new-message-actions">
+                    <button id="cancel-new-message" class="btn-secondary">Cancel</button>
+                    <button id="send-new-message" class="btn-primary">Send Message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yield Calculator Modal -->
+    <div id="yield-calculator-modal" class="yield-calculator-modal">
+        <div class="yield-calculator-content">
+            <div class="yield-calculator-header">
+                <h2><i class="fas fa-calculator"></i> Yield Calculator</h2>
+                <button class="yield-calculator-close">&times;</button>
+            </div>
+            <div class="yield-calculator-body">
+                <div class="calculator-grid">
+                    <div class="calculator-inputs">
+                        <h3>Grow Setup</h3>
+                        <div class="form-group">
+                            <label>Tent Size (ft²)</label>
+                            <input type="number" id="tent-size" value="16" min="4" max="100" step="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Light Type</label>
+                            <select id="light-type">
+                                <option value="led">LED</option>
+                                <option value="hps">HPS</option>
+                                <option value="cmh">CMH</option>
+                                <option value="fluorescent">Fluorescent</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Light Wattage</label>
+                            <input type="number" id="light-wattage" value="480" min="100" max="2000" step="10">
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Plants</label>
+                            <input type="number" id="plant-count" value="4" min="1" max="25" step="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Experience Level</label>
+                            <select id="experience-level">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate" selected>Intermediate</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Growing Medium</label>
+                            <select id="growing-medium">
+                                <option value="soil">Soil</option>
+                                <option value="coco">Coco Coir</option>
+                                <option value="hydro">Hydroponics</option>
+                                <option value="aeroponics">Aeroponics</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="calculator-results">
+                        <h3>Estimated Yield</h3>
+                        <div class="yield-display">
+                            <span id="estimated-yield">0</span>
+                            <span class="yield-unit">grams</span>
+                        </div>
+                        <div class="yield-per-plant">
+                            <span id="yield-per-plant">0</span>
+                            <span class="yield-unit">g/plant</span>
+                        </div>
+                        <div class="yield-per-watt">
+                            <span id="yield-per-watt">0</span>
+                            <span class="yield-unit">g/watt</span>
+                        </div>
+                        <div class="growing-time">
+                            <h4>Estimated Timeline</h4>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <span class="timeline-label">Vegetative:</span>
+                                    <span id="veg-time">4-6</span> weeks
+                                </div>
+                                <div class="timeline-item">
+                                    <span class="timeline-label">Flowering:</span>
+                                    <span id="flower-time">8-10</span> weeks
+                                </div>
+                                <div class="timeline-item">
+                                    <span class="timeline-label">Total:</span>
+                                    <span id="total-time">12-16</span> weeks
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calculator-actions">
+                            <button id="calculate-yield-btn" class="btn-primary">Calculate</button>
+                            <button id="save-calculator-results" class="btn-secondary">Save Results</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="saved-calculations">
+                    <h4>Your Saved Calculations</h4>
+                    <div id="saved-calculations-list" class="saved-calculations-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Forum Hero Section -->
     <section class="forum-hero-section">
         <div class="forum-hero-overlay">
             <div class="container">
                 <div class="forum-hero-content">
-                    <h1 class="forum-hero-title">Cannabis <span class="highlight">Growers</span> Forum Greedit</h1>
+                    <h1 class="forum-hero-title">Cannabis <span class="highlight">Growers</span> Forum</h1>
                     <p class="forum-hero-subtitle">Share experiences, ask questions, and connect with fellow cultivators</p>
                     <div id="user-welcome" class="user-welcome">
                         <p>Welcome to our community! <a href="#" id="open-login">Login</a> or <a href="#" id="open-register">Register</a> to join the discussion.</p>
                     </div>
                     <div id="logged-in-user" class="logged-in-user" style="display: none;">
                         <div class="user-info">
-                            <div class="user-avatar">
-                                <i class="fas fa-user"></i>
+                            <div class="user-avatar" id="user-avatar-clickable" style="cursor: pointer;">
+                                <img id="user-avatar-img" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234CAF50'/><text x='50' y='70' font-size='40' text-anchor='middle' fill='white'>🌿</text></svg>" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
                             </div>
                             <div>
-                                <h3 id="username-display">Username</h3>
+                                <h3 id="username-display" style="cursor: pointer;">
+                                    <span id="username-text">Username</span>
+                                    <span id="user-badge-display" class="user-badge"></span>
+                                </h3>
                                 <button id="logout-btn" class="btn-secondary btn-small">Logout</button>
                             </div>
                         </div>
-                        <button id="create-post-btn" class="btn-primary">
-                            <i class="fas fa-plus"></i> Create Post
-                        </button>
+                        <div class="user-actions">
+                            <button id="create-post-btn" class="btn-primary">
+                                <i class="fas fa-plus"></i> Create Post
+                            </button>
+                            <button id="profile-btn" class="btn-secondary btn-small">
+                                <i class="fas fa-user"></i> Profile
+                            </button>
+                            <button id="messages-btn" class="btn-secondary btn-small">
+                                <i class="fas fa-envelope"></i> Messages
+                                <span id="nav-unread-badge" class="unread-badge-small" style="display: none;">0</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- User Profile Modal -->
+    <div id="profile-modal" class="profile-modal">
+        <div class="profile-modal-content">
+            <div class="profile-modal-header">
+                <h2>Your Profile</h2>
+                <button class="profile-modal-close">&times;</button>
+            </div>
+            <div class="profile-modal-body">
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar-preview">
+                        <img id="avatar-preview" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234CAF50'/><text x='50' y='70' font-size='40' text-anchor='middle' fill='white'>🌿</text></svg>" alt="Avatar">
+                    </div>
+                    <div class="profile-avatar-upload">
+                        <label for="avatar-upload" class="btn-secondary">
+                            <i class="fas fa-camera"></i> Change Avatar
+                        </label>
+                        <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+                        <button id="remove-avatar" class="btn-small btn-danger" style="display: none;">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                    <p class="avatar-hint">Recommended: Square image, max 2MB</p>
+                </div>
+                
+                <div class="profile-info-section">
+                    <h3>Profile Information</h3>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="profile-username" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="profile-email" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Bio</label>
+                        <textarea id="profile-bio" placeholder="Tell us about your grows..." rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="profile-location" placeholder="City, Country">
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="profile-post-count">0</span>
+                            <span class="stat-label">Posts</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="profile-comment-count">0</span>
+                            <span class="stat-label">Comments</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="profile-join-date">2026</span>
+                            <span class="stat-label">Member</span>
+                        </div>
+                    </div>
+                    <div class="profile-badge-section">
+                        <h4>Your Rank</h4>
+                        <div id="profile-badge-display" class="profile-badge">
+                            <span id="badge-icon">🌱</span>
+                            <span id="badge-name">Seedling</span>
+                        </div>
+                        <div class="badge-progress">
+                            <div class="progress-label">
+                                <span>Next Rank:</span>
+                                <span id="next-rank">Grower</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div id="rank-progress" class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                            <div class="progress-stats">
+                                <span id="current-posts">0</span>/<span id="posts-needed">10</span> posts
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-actions">
+                    <button id="save-profile" class="btn-primary">Save Changes</button>
+                    <button id="cancel-profile" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Create Post Modal -->
     <div id="create-post-modal" class="create-post-modal">
@@ -163,7 +436,14 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <textarea id="post-content" placeholder="What would you like to share? (Markdown supported)" rows="8" required></textarea>
+                    <label for="post-image" class="btn-secondary">
+                        <i class="fas fa-camera"></i> Add Photos
+                    </label>
+                    <input type="file" id="post-image" accept="image/*" multiple style="display: none;">
+                    <div id="image-preview-container" class="image-preview-container"></div>
+                </div>
+                <div class="form-group">
+                    <textarea id="post-content" placeholder="What would you like to share?" rows="8" required></textarea>
                 </div>
                 <div class="form-group">
                     <input type="text" id="post-tags" placeholder="Add tags (separate by commas)">
@@ -223,8 +503,8 @@
                                 <span class="stat-label">Comments</span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-number">24h</span>
-                                <span class="stat-label">Active</span>
+                                <span class="stat-number" id="total-messages">0</span>
+                                <span class="stat-label">Messages</span>
                             </div>
                         </div>
                     </div>
@@ -261,7 +541,6 @@
                     
                     <!-- Posts Container -->
                     <div id="posts-container" class="posts-container">
-                        <!-- Posts will be loaded here dynamically -->
                         <div class="loading-posts">
                             <div class="loading-spinner">
                                 <i class="fas fa-cannabis fa-spin"></i>
@@ -303,7 +582,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <span class="logo-icon">🌱 Space Vibe Garden</span>
+                    <span class="logo-icon">🌿 Space Vibe Garden</span>
                     <p>Professional Cannabis Cultivation</p>
                 </div>
                 <div class="footer-links">
@@ -312,6 +591,7 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="forum.html">Forum</a></li>
                         <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="#yield-calculator" id="footer-calculator">Yield Calculator</a></li>
                     </ul>
                 </div>
                 <div class="footer-social">
@@ -331,11 +611,9 @@
         </div>
     </footer>
 
-    <!-- JavaScript Files - CORRECT ORDER -->
+    <!-- JavaScript Files -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Supabase Configuration - NO type="module" -->
     <script src="supabase-config.js"></script>
     <script src="script.js"></script>
     <script src="forum-script.js"></script>
