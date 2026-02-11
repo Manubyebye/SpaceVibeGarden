@@ -3321,3 +3321,109 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log('   Current admin emails: admin@spacevibe.com, your-email@gmail.com');
     console.log('✅ Current User: ' + (currentUser ? currentUser.username + ' (Admin: ' + isAdmin() + ')' : 'Not logged in'));
 });
+
+// ============================================ //
+// FORCE FIX: COMMENT AVATAR SIZE              //
+// ============================================ //
+
+function fixCommentAvatars() {
+    // Run immediately
+    resizeAllCommentAvatars();
+    
+    // Run after DOM changes
+    const observer = new MutationObserver(function(mutations) {
+        resizeAllCommentAvatars();
+    });
+    
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+    
+    // Also run on interval to catch any late-loading comments
+    setInterval(resizeAllCommentAvatars, 1000);
+}
+
+function resizeAllCommentAvatars() {
+    const avatars = document.querySelectorAll('.comment-avatar, #post-detail-modal-custom .comment-avatar, .comment-item .comment-avatar');
+    avatars.forEach(avatar => {
+        avatar.style.width = '32px';
+        avatar.style.height = '32px';
+        avatar.style.minWidth = '32px';
+        avatar.style.maxWidth = '32px';
+        avatar.style.minHeight = '32px';
+        avatar.style.maxHeight = '32px';
+        
+        const img = avatar.querySelector('img');
+        if (img) {
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+        }
+    });
+}
+
+// Run the fix
+fixCommentAvatars();
+
+// ============================================ //
+// FIX: POST AUTHOR AVATAR SIZE               //
+// ============================================ //
+
+function fixAuthorAvatars() {
+    // Select all post author avatars
+    const authorAvatars = document.querySelectorAll('.post-author img, .author-avatar, .post-detail-modal-body img[alt="Avatar"]');
+    
+    authorAvatars.forEach(img => {
+        // Check if this is an author avatar (not a comment avatar)
+        if (img.closest('.post-author') || img.closest('.author-info') || img.classList.contains('author-avatar')) {
+            img.style.width = '32px';
+            img.style.height = '32px';
+            img.style.minWidth = '32px';
+            img.style.maxWidth = '32px';
+            img.style.minHeight = '32px';
+            img.style.maxHeight = '32px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '50%';
+            img.style.border = '2px solid #4CAF50';
+            
+            // Fix parent container if needed
+            const parent = img.closest('.post-author');
+            if (parent) {
+                parent.style.display = 'flex';
+                parent.style.alignItems = 'center';
+                parent.style.gap = '10px';
+            }
+        }
+    });
+}
+
+// Override the viewPostDetails function to fix avatars
+const originalViewPostDetails = window.viewPostDetails || viewPostDetails;
+window.viewPostDetails = function(postId) {
+    if (originalViewPostDetails) {
+        originalViewPostDetails(postId);
+    }
+    
+    // Fix avatars multiple times after post loads
+    setTimeout(fixAuthorAvatars, 50);
+    setTimeout(fixAuthorAvatars, 150);
+    setTimeout(fixAuthorAvatars, 300);
+    setTimeout(fixAuthorAvatars, 500);
+    setTimeout(fixAuthorAvatars, 1000);
+};
+
+// Run on page load
+document.addEventListener('DOMContentLoaded', fixAuthorAvatars);
+
+// Run on any DOM change
+const authorObserver = new MutationObserver(fixAuthorAvatars);
+authorObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+// Run immediately
+fixAuthorAvatars();
+
+console.log('✅ Author avatar fix: Post author avatars now 32px');
