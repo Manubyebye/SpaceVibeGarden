@@ -1,5 +1,5 @@
 // ============================================ //
-// SUPABASE CONFIGURATION - YOUR CREDENTIALS    //
+// SUPABASE CONFIGURATION - REQUIRED!           //
 // ============================================ //
 
 const SUPABASE_URL = 'https://dfwxocwkblhqbppulbyk.supabase.co';
@@ -9,11 +9,24 @@ let supabaseClient = null;
 
 try {
     if (typeof supabase !== 'undefined') {
-        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                autoRefreshToken: true,
+                persistSession: true,
+                detectSessionInUrl: true
+            },
+            realtime: {
+                params: {
+                    eventsPerSecond: 10
+                }
+            }
+        });
         console.log('✅ Supabase client initialized');
+    } else {
+        console.error('❌ Supabase library not loaded');
     }
 } catch (error) {
-    console.error('❌ Supabase init failed:', error);
+    console.error('❌ Failed to initialize Supabase:', error);
 }
 
 window.supabase = supabaseClient;

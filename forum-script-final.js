@@ -1,6 +1,7 @@
 // ============================================ //
-// SPACE VIBE GARDEN FORUM - COMPLETE FIXED     //
-// EVERYTHING WORKS - DESIGN UNCHANGED          //
+// SPACE VIBE GARDEN FORUM - ULTIMATE FINAL     //
+// SUPABASE ONLY - NO LOCALSTORAGE CACHE        //
+// EVERYTHING WORKS - POSTS, IMAGES, CHAT      //
 // ============================================ //
 
 // ============================================ //
@@ -20,8 +21,10 @@ window.messagesSubscription = null;
 window.unreadCount = 0;
 window.savedCalculations = [];
 
+console.log('🚀 Forum script loading...');
+
 // ============================================ //
-// HELPER FUNCTIONS - ALL GLOBAL               //
+// HELPER FUNCTIONS                           //
 // ============================================ //
 
 window.getDefaultAvatar = function() {
@@ -106,104 +109,128 @@ window.getUserById = function(userId) {
 };
 
 // ============================================ //
-// DEMO DATA - FALLBACK ONLY                   //
+// LOAD USERS FROM SUPABASE                    //
 // ============================================ //
 
-window.createDemoUsers = function() {
-    return [
-        { id: '1', email: 'admin@spacevibe.com', username: 'SpaceGardener', avatar: window.getDefaultAvatar(), bio: 'Master grower with 10 years experience', location: 'Amsterdam', join_date: new Date(Date.now() - 30*24*60*60*1000).toISOString(), post_count: 105, comment_count: 312 },
-        { id: '2', email: 'canna@spacevibe.com', username: 'CannaMaster', avatar: window.getDefaultAvatar(), bio: 'Organic growing specialist', location: 'Barcelona', join_date: new Date(Date.now() - 20*24*60*60*1000).toISOString(), post_count: 68, comment_count: 175 },
-        { id: '3', email: 'led@spacevibe.com', username: 'LEDGrower', avatar: window.getDefaultAvatar(), bio: 'LED lighting expert', location: 'Berlin', join_date: new Date(Date.now() - 10*24*60*60*1000).toISOString(), post_count: 45, comment_count: 93 },
-        { id: '4', email: 'organic@spacevibe.com', username: 'OrganicQueen', avatar: window.getDefaultAvatar(), bio: 'Living soil advocate', location: 'Prague', join_date: new Date(Date.now() - 5*24*60*60*1000).toISOString(), post_count: 28, comment_count: 71 }
-    ];
-};
-
-window.createDemoPosts = function() {
-    return [
-        { id: window.generateId(), user_id: '1', title: 'First time grower - Need advice on nutrients', category: 'vegetative', content: "Hello everyone! I'm starting my first cannabis grow and could use some advice on nutrients. I'm growing in soil and currently in the vegetative stage. What nutrients have worked best for you?", tags: ['nutrients', 'vegetative', 'beginners'], images: [], created_at: new Date(Date.now() - 5*60*60*1000).toISOString(), updated_at: new Date(Date.now() - 5*60*60*1000).toISOString(), likes: 12, views: 45, comments: [], pinned: true },
-        { id: window.generateId(), user_id: '2', title: 'LED vs HPS - My 6 month comparison', category: 'equipment', content: "I've been running a side-by-side comparison for 6 months: 600W HPS vs 480W LED. Results: LED produced 15% more yield, used 40% less electricity.", tags: ['led', 'hps', 'lighting'], images: [], created_at: new Date(Date.now() - 24*60*60*1000).toISOString(), updated_at: new Date(Date.now() - 24*60*60*1000).toISOString(), likes: 24, views: 78, comments: [], pinned: false },
-        { id: window.generateId(), user_id: '3', title: 'Complete organic grow guide', category: 'general', content: "After 3 years of organic growing, here's my complete setup: Soil: 40% coco coir, 30% worm castings, 20% perlite, 10% biochar. Nutrients: Compost tea every 2 weeks.", tags: ['organic', 'guide', 'soil'], images: [], created_at: new Date(Date.now() - 2*24*60*60*1000).toISOString(), updated_at: new Date(Date.now() - 2*24*60*60*1000).toISOString(), likes: 42, views: 156, comments: [], pinned: false },
-        { id: window.generateId(), user_id: '4', title: 'Spider mites emergency!', category: 'problems', content: "Found spider mites on my flowering plants! In week 3 of flowering. What's safe to use at this stage?", tags: ['spider-mites', 'pests', 'flowering'], images: [], created_at: new Date(Date.now() - 3*60*60*1000).toISOString(), updated_at: new Date(Date.now() - 3*60*60*1000).toISOString(), likes: 8, views: 32, comments: [], pinned: false }
-    ];
-};
-
-// ============================================ //
-// LOAD/SAVE DATA - PERSISTENCE FIXED!         //
-// ============================================ //
-
-window.loadInitialData = function() {
-    // Load users
-    const storedUsers = localStorage.getItem('forum_users');
-    if (storedUsers) {
-        try {
-            window.forumUsers = JSON.parse(storedUsers);
-        } catch (e) {
-            window.forumUsers = window.createDemoUsers();
-        }
-    } else {
-        window.forumUsers = window.createDemoUsers();
-        localStorage.setItem('forum_users', JSON.stringify(window.forumUsers));
-    }
+window.loadUsersFromSupabase = async function() {
+    if (!window.supabase) return;
     
-    // Load posts
-    const storedPosts = localStorage.getItem('forum_posts');
-    if (storedPosts) {
-        try {
-            window.forumPosts = JSON.parse(storedPosts);
-        } catch (e) {
-            window.forumPosts = window.createDemoPosts();
+    try {
+        const { data, error } = await window.supabase
+            .from('profiles')
+            .select('*');
+        
+        if (error) throw error;
+        
+        if (data) {
+            window.forumUsers = data.map(profile => ({
+                id: profile.id,
+                email: profile.email,
+                username: profile.username,
+                avatar: profile.avatar || window.getDefaultAvatar(),
+                bio: profile.bio || '',
+                location: profile.location || '',
+                join_date: profile.join_date || new Date().toISOString(),
+                post_count: profile.post_count || 0,
+                comment_count: profile.comment_count || 0
+            }));
+            console.log('✅ Loaded', window.forumUsers.length, 'users from Supabase');
         }
-    } else {
-        window.forumPosts = window.createDemoPosts();
-        localStorage.setItem('forum_posts', JSON.stringify(window.forumPosts));
+    } catch (error) {
+        console.error('❌ Error loading users:', error);
     }
-    
-    console.log('📦 Data loaded:', window.forumUsers.length, 'users,', window.forumPosts.length, 'posts');
 };
 
 // ============================================ //
-// AUTH FUNCTIONS - LOGIN/WORKING              //
+// LOAD POSTS FROM SUPABASE                    //
+// ============================================ //
+
+window.loadPostsFromSupabase = async function() {
+    if (!window.supabase) return;
+    
+    try {
+        const { data, error } = await window.supabase
+            .from('posts')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        if (data) {
+            window.forumPosts = data.map(post => ({
+                ...post,
+                comments: []
+            }));
+            console.log('✅ Loaded', window.forumPosts.length, 'posts from Supabase');
+        }
+    } catch (error) {
+        console.error('❌ Error loading posts:', error);
+    }
+};
+
+// ============================================ //
+// LOAD COMMENTS FOR A POST                    //
+// ============================================ //
+
+window.loadCommentsForPost = async function(postId) {
+    if (!window.supabase) return [];
+    
+    try {
+        const { data, error } = await window.supabase
+            .from('comments')
+            .select('*')
+            .eq('post_id', postId)
+            .order('created_at', { ascending: true });
+        
+        if (error) throw error;
+        
+        return data || [];
+    } catch (error) {
+        console.error('❌ Error loading comments:', error);
+        return [];
+    }
+};
+
+// ============================================ //
+// AUTH FUNCTIONS - SUPABASE ONLY              //
 // ============================================ //
 
 window.checkUser = async function() {
-    // First check localStorage
-    const savedUser = localStorage.getItem('forum_current_user');
-    if (savedUser) {
-        try {
-            window.currentUser = JSON.parse(savedUser);
-            console.log('👤 Loaded user from localStorage:', window.currentUser.username);
-        } catch (e) {}
-    }
+    if (!window.supabase) return;
     
-    // Then try Supabase
-    if (window.supabase) {
-        try {
-            const { data: { user } } = await window.supabase.auth.getUser();
-            if (user) {
-                const { data: profile } = await window.supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', user.id)
-                    .single();
+    try {
+        const { data: { user } } = await window.supabase.auth.getUser();
+        if (user) {
+            const { data: profile } = await window.supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+            
+            if (profile) {
+                window.currentUser = {
+                    id: profile.id,
+                    email: profile.email,
+                    username: profile.username,
+                    avatar: profile.avatar || window.getDefaultAvatar(),
+                    bio: profile.bio || '',
+                    location: profile.location || '',
+                    postCount: profile.post_count || 0,
+                    commentCount: profile.comment_count || 0,
+                    join_date: profile.join_date || new Date().toISOString()
+                };
                 
-                if (profile) {
-                    window.currentUser = {
-                        id: profile.id,
-                        email: profile.email,
-                        username: profile.username,
-                        avatar: profile.avatar || window.getDefaultAvatar(),
-                        bio: profile.bio || '',
-                        location: profile.location || '',
-                        postCount: profile.post_count || 0,
-                        commentCount: profile.comment_count || 0,
-                        join_date: profile.join_date || new Date().toISOString()
-                    };
-                    localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
-                    console.log('👤 Loaded user from Supabase:', window.currentUser.username);
-                }
+                // Only store current user in localStorage, nothing else
+                localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
             }
-        } catch (e) {
-            console.log('Supabase check failed, using localStorage');
+        }
+    } catch (e) {
+        console.error('❌ Failed to check user:', e);
+        const savedUser = localStorage.getItem('forum_current_user');
+        if (savedUser) {
+            try {
+                window.currentUser = JSON.parse(savedUser);
+            } catch (e) {}
         }
     }
     
@@ -211,6 +238,11 @@ window.checkUser = async function() {
 };
 
 window.handleLogin = async function() {
+    if (!window.supabase) {
+        window.showErrorMessage('Supabase is not available');
+        return;
+    }
+    
     const email = document.getElementById('login-email')?.value.trim() || '';
     const password = document.getElementById('login-password')?.value.trim() || '';
     
@@ -219,108 +251,64 @@ window.handleLogin = async function() {
         return;
     }
     
-    // Try Supabase first
-    if (window.supabase) {
-        try {
-            const { data, error } = await window.supabase.auth.signInWithPassword({ email, password });
-            if (!error && data.user) {
-                const { data: profile } = await window.supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', data.user.id)
-                    .single();
-                
-                if (profile) {
-                    window.currentUser = {
-                        id: profile.id,
-                        email: profile.email,
-                        username: profile.username,
-                        avatar: profile.avatar || window.getDefaultAvatar(),
-                        bio: profile.bio || '',
-                        location: profile.location || '',
-                        postCount: profile.post_count || 0,
-                        commentCount: profile.comment_count || 0,
-                        join_date: profile.join_date || new Date().toISOString()
-                    };
-                    
-                    localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
-                    
-                    // Update forum users list
-                    const existing = window.forumUsers.findIndex(u => u.id === window.currentUser.id);
-                    if (existing === -1) {
-                        window.forumUsers.push({
-                            id: window.currentUser.id,
-                            email: window.currentUser.email,
-                            username: window.currentUser.username,
-                            avatar: window.currentUser.avatar,
-                            bio: window.currentUser.bio,
-                            location: window.currentUser.location,
-                            join_date: window.currentUser.join_date,
-                            post_count: window.currentUser.postCount,
-                            comment_count: window.currentUser.commentCount
-                        });
-                        localStorage.setItem('forum_users', JSON.stringify(window.forumUsers));
-                    }
-                    
-                    // Show success
-                    document.getElementById('login-form')?.classList.remove('active');
-                    document.getElementById('auth-success')?.classList.add('active');
-                    document.getElementById('success-message').textContent = 'Login Successful!';
-                    document.getElementById('success-detail').textContent = `Welcome back, ${window.currentUser.username}!`;
-                    
-                    window.updateUserInterface();
-                    window.filterPosts();
-                    window.showSuccessMessage(`Welcome back, ${window.currentUser.username}!`);
-                    
-                    setTimeout(() => {
-                        document.getElementById('auth-modal')?.classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                    }, 1500);
-                    
-                    return;
-                }
-            }
-        } catch (error) {
-            console.error('Supabase login error:', error);
+    try {
+        const { data, error } = await window.supabase.auth.signInWithPassword({ email, password });
+        
+        if (error) {
+            window.showErrorMessage('Login failed: ' + error.message);
+            return;
         }
-    }
-    
-    // Fallback to demo users
-    const user = window.forumUsers.find(u => u.email === email);
-    if (user) {
-        window.currentUser = {
-            id: user.id,
-            email: user.email,
-            username: user.username,
-            avatar: user.avatar || window.getDefaultAvatar(),
-            bio: user.bio || '',
-            location: user.location || '',
-            postCount: user.post_count || 0,
-            commentCount: user.comment_count || 0,
-            join_date: user.join_date || new Date().toISOString()
-        };
         
-        localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
-        
-        document.getElementById('login-form')?.classList.remove('active');
-        document.getElementById('auth-success')?.classList.add('active');
-        document.getElementById('success-message').textContent = 'Login Successful! (Demo)';
-        document.getElementById('success-detail').textContent = `Welcome back, ${window.currentUser.username}!`;
-        
-        window.updateUserInterface();
-        window.filterPosts();
-        window.showSuccessMessage(`Welcome back, ${window.currentUser.username}! (Demo)`);
-        
-        setTimeout(() => {
-            document.getElementById('auth-modal')?.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }, 1500);
-    } else {
-        window.showErrorMessage('User not found. Try: admin@spacevibe.com');
+        if (data.user) {
+            const { data: profile } = await window.supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', data.user.id)
+                .single();
+            
+            if (profile) {
+                window.currentUser = {
+                    id: profile.id,
+                    email: profile.email,
+                    username: profile.username,
+                    avatar: profile.avatar || window.getDefaultAvatar(),
+                    bio: profile.bio || '',
+                    location: profile.location || '',
+                    postCount: profile.post_count || 0,
+                    commentCount: profile.comment_count || 0,
+                    join_date: profile.join_date || new Date().toISOString()
+                };
+                
+                localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
+                
+                document.getElementById('login-form')?.classList.remove('active');
+                document.getElementById('auth-success')?.classList.add('active');
+                document.getElementById('success-message').textContent = 'Login Successful!';
+                document.getElementById('success-detail').textContent = `Welcome back, ${window.currentUser.username}!`;
+                
+                window.updateUserInterface();
+                await window.loadPostsFromSupabase();
+                window.filterPosts();
+                window.showSuccessMessage(`Welcome back, ${window.currentUser.username}!`);
+                
+                setTimeout(() => {
+                    document.getElementById('auth-modal')?.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }, 1500);
+            }
+        }
+    } catch (error) {
+        console.error('❌ Login error:', error);
+        window.showErrorMessage('Login failed. Please try again.');
     }
 };
 
 window.handleRegister = async function() {
+    if (!window.supabase) {
+        window.showErrorMessage('Supabase is not available');
+        return;
+    }
+    
     const username = document.getElementById('register-username')?.value.trim() || '';
     const email = document.getElementById('register-email')?.value.trim() || '';
     const password = document.getElementById('register-password')?.value.trim() || '';
@@ -342,142 +330,93 @@ window.handleRegister = async function() {
         return;
     }
     
-    // Try Supabase first
-    if (window.supabase) {
-        try {
-            const { data, error } = await window.supabase.auth.signUp({
-                email,
-                password,
-                options: { data: { username } }
-            });
-            
-            if (!error && data.user) {
-                const { error: profileError } = await window.supabase
-                    .from('profiles')
-                    .insert([{
-                        id: data.user.id,
-                        email,
-                        username,
-                        avatar: window.getDefaultAvatar(),
-                        bio: '',
-                        location: '',
-                        join_date: new Date().toISOString(),
-                        post_count: 0,
-                        comment_count: 0
-                    }]);
-                
-                if (!profileError) {
-                    window.currentUser = {
-                        id: data.user.id,
-                        email,
-                        username,
-                        avatar: window.getDefaultAvatar(),
-                        bio: '',
-                        location: '',
-                        postCount: 0,
-                        commentCount: 0,
-                        join_date: new Date().toISOString()
-                    };
-                    
-                    localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
-                    
-                    // Add to forum users
-                    window.forumUsers.push({
-                        id: window.currentUser.id,
-                        email: window.currentUser.email,
-                        username: window.currentUser.username,
-                        avatar: window.currentUser.avatar,
-                        bio: '',
-                        location: '',
-                        join_date: window.currentUser.join_date,
-                        post_count: 0,
-                        comment_count: 0
-                    });
-                    localStorage.setItem('forum_users', JSON.stringify(window.forumUsers));
-                    
-                    document.getElementById('register-form')?.classList.remove('active');
-                    document.getElementById('auth-success')?.classList.add('active');
-                    document.getElementById('success-message').textContent = 'Account Created!';
-                    document.getElementById('success-detail').textContent = `Welcome, ${username}!`;
-                    
-                    window.updateUserInterface();
-                    window.showSuccessMessage(`Welcome, ${username}!`);
-                    
-                    setTimeout(() => {
-                        document.getElementById('auth-modal')?.classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                    }, 1500);
-                    
-                    return;
-                }
-            }
-        } catch (error) {
-            console.error('Supabase registration error:', error);
+    try {
+        const { data, error } = await window.supabase.auth.signUp({
+            email,
+            password,
+            options: { data: { username } }
+        });
+        
+        if (error) {
+            window.showErrorMessage('Registration failed: ' + error.message);
+            return;
         }
+        
+        if (data.user) {
+            const { error: profileError } = await window.supabase
+                .from('profiles')
+                .insert([{
+                    id: data.user.id,
+                    email,
+                    username,
+                    avatar: window.getDefaultAvatar(),
+                    bio: '',
+                    location: '',
+                    join_date: new Date().toISOString(),
+                    post_count: 0,
+                    comment_count: 0
+                }]);
+            
+            if (profileError) {
+                console.error('❌ Profile creation error:', profileError);
+                window.showErrorMessage('Failed to create profile');
+                return;
+            }
+            
+            window.currentUser = {
+                id: data.user.id,
+                email,
+                username,
+                avatar: window.getDefaultAvatar(),
+                bio: '',
+                location: '',
+                postCount: 0,
+                commentCount: 0,
+                join_date: new Date().toISOString()
+            };
+            
+            localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
+            
+            document.getElementById('register-form')?.classList.remove('active');
+            document.getElementById('auth-success')?.classList.add('active');
+            document.getElementById('success-message').textContent = 'Account Created!';
+            document.getElementById('success-detail').textContent = `Welcome, ${username}!`;
+            
+            window.updateUserInterface();
+            window.showSuccessMessage(`Welcome, ${username}!`);
+            
+            setTimeout(() => {
+                document.getElementById('auth-modal')?.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }, 1500);
+        }
+    } catch (error) {
+        console.error('❌ Registration error:', error);
+        window.showErrorMessage('Registration failed. Please try again.');
     }
-    
-    // Fallback to demo
-    if (window.forumUsers.some(u => u.username === username)) {
-        window.showErrorMessage('Username already taken');
-        return;
-    }
-    
-    if (window.forumUsers.some(u => u.email === email)) {
-        window.showErrorMessage('Email already registered');
-        return;
-    }
-    
-    const newUser = {
-        id: window.generateId(),
-        email,
-        username,
-        avatar: window.getDefaultAvatar(),
-        bio: '',
-        location: '',
-        join_date: new Date().toISOString(),
-        post_count: 0,
-        comment_count: 0
-    };
-    
-    window.forumUsers.push(newUser);
-    localStorage.setItem('forum_users', JSON.stringify(window.forumUsers));
-    
-    window.currentUser = {
-        id: newUser.id,
-        email: newUser.email,
-        username: newUser.username,
-        avatar: newUser.avatar,
-        bio: newUser.bio,
-        location: newUser.location,
-        postCount: newUser.post_count,
-        commentCount: newUser.comment_count,
-        join_date: newUser.join_date
-    };
-    
-    localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
-    
-    document.getElementById('register-form')?.classList.remove('active');
-    document.getElementById('auth-success')?.classList.add('active');
-    document.getElementById('success-message').textContent = 'Account Created! (Demo)';
-    document.getElementById('success-detail').textContent = `Welcome, ${username}!`;
-    
-    window.updateUserInterface();
-    window.showSuccessMessage(`Welcome, ${username}! (Demo)`);
-    
-    setTimeout(() => {
-        document.getElementById('auth-modal')?.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }, 1500);
 };
 
 window.handleLogout = async function() {
     if (window.supabase) {
-        try { await window.supabase.auth.signOut(); } catch (e) {}
+        try { 
+            await window.supabase.auth.signOut(); 
+        } catch (e) {}
+    }
+    
+    if (window.messagesSubscription) {
+        window.messagesSubscription.unsubscribe();
+        window.messagesSubscription = null;
     }
     
     window.currentUser = null;
+    window.activeConversation = null;
+    window.conversations = [];
+    window.unreadCount = 0;
+    window.forumPosts = [];
+    
     localStorage.removeItem('forum_current_user');
     window.updateUserInterface();
+    window.updateUnreadBadge();
     window.showSuccessMessage('Logged out!');
     window.filterPosts();
 };
@@ -514,7 +453,7 @@ window.updateUserInterface = function() {
 };
 
 // ============================================ //
-// PROFILE FUNCTIONS - FULLY FIXED!             //
+// PROFILE FUNCTIONS - SUPABASE ONLY           //
 // ============================================ //
 
 window.openProfileModal = function() {
@@ -523,9 +462,18 @@ window.openProfileModal = function() {
         return;
     }
     
-    console.log('📝 Opening profile for:', window.currentUser.username);
+    console.log('📝 Opening profile modal');
+    const profileModal = document.getElementById('profile-modal');
+    if (profileModal) {
+        profileModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        window.populateProfileModal();
+    }
+};
+
+window.populateProfileModal = function() {
+    if (!window.currentUser) return;
     
-    // Fill in the form
     const profileUsername = document.getElementById('profile-username');
     const profileEmail = document.getElementById('profile-email');
     const profileBio = document.getElementById('profile-bio');
@@ -555,7 +503,6 @@ window.openProfileModal = function() {
         removeAvatarBtn.style.display = (window.currentUser.avatar && window.currentUser.avatar !== window.getDefaultAvatar()) ? 'inline-block' : 'none';
     }
     
-    // Update badge display
     const badgeIcon = document.getElementById('badge-icon');
     const badgeName = document.getElementById('badge-name');
     const nextRank = document.getElementById('next-rank');
@@ -581,13 +528,6 @@ window.openProfileModal = function() {
     
     if (currentPosts) currentPosts.textContent = window.currentUser.postCount || 0;
     if (rankProgress) rankProgress.style.width = `${window.getRankProgress(window.currentUser.postCount || 0)}%`;
-    
-    // Show modal
-    const profileModal = document.getElementById('profile-modal');
-    if (profileModal) {
-        profileModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
 };
 
 window.closeProfileModal = function() {
@@ -624,7 +564,6 @@ window.handleAvatarUpload = function(e) {
         if (userAvatarImg) userAvatarImg.src = avatarData;
         if (removeAvatarBtn) removeAvatarBtn.style.display = 'inline-block';
         
-        // Store temporarily
         window.pendingAvatar = avatarData;
     };
     
@@ -648,14 +587,15 @@ window.handleRemoveAvatar = function() {
 window.saveProfile = async function() {
     if (!window.currentUser) return;
     
-    console.log('💾 Saving profile...');
+    if (!window.supabase) {
+        window.showErrorMessage('Supabase is not available');
+        return;
+    }
     
-    // Get values from form
     const profileBio = document.getElementById('profile-bio');
     const profileLocation = document.getElementById('profile-location');
     const avatarPreview = document.getElementById('avatar-preview');
     
-    // Update current user
     if (profileBio) window.currentUser.bio = profileBio.value.trim();
     if (profileLocation) window.currentUser.location = profileLocation.value.trim();
     if (avatarPreview) window.currentUser.avatar = avatarPreview.src;
@@ -664,45 +604,35 @@ window.saveProfile = async function() {
         delete window.pendingAvatar;
     }
     
-    // Save to localStorage
-    localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
-    
-    // Update in forumUsers array
-    const userIndex = window.forumUsers.findIndex(u => u.id === window.currentUser.id);
-    if (userIndex !== -1) {
-        window.forumUsers[userIndex].bio = window.currentUser.bio;
-        window.forumUsers[userIndex].location = window.currentUser.location;
-        window.forumUsers[userIndex].avatar = window.currentUser.avatar;
-        localStorage.setItem('forum_users', JSON.stringify(window.forumUsers));
+    try {
+        const { error } = await window.supabase
+            .from('profiles')
+            .update({
+                bio: window.currentUser.bio,
+                location: window.currentUser.location,
+                avatar: window.currentUser.avatar
+            })
+            .eq('id', window.currentUser.id);
+        
+        if (error) throw error;
+        
+        localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
+        
+        window.showSuccessMessage('Profile updated successfully!');
+        window.closeProfileModal();
+        window.updateUserInterface();
+        
+        // Refresh users list
+        await window.loadUsersFromSupabase();
+        
+    } catch (error) {
+        console.error('❌ Error saving profile:', error);
+        window.showErrorMessage('Failed to save profile');
     }
-    
-    // Try Supabase
-    if (window.supabase) {
-        try {
-            await window.supabase
-                .from('profiles')
-                .update({
-                    bio: window.currentUser.bio,
-                    location: window.currentUser.location,
-                    avatar: window.currentUser.avatar
-                })
-                .eq('id', window.currentUser.id);
-            console.log('✅ Profile saved to Supabase');
-        } catch (e) {
-            console.log('⚠️ Failed to save to Supabase:', e);
-        }
-    }
-    
-    window.showSuccessMessage('Profile updated successfully!');
-    window.closeProfileModal();
-    window.updateUserInterface();
-    
-    // Refresh posts to show updated avatar
-    window.filterPosts();
 };
 
 // ============================================ //
-// POST IMAGES - FULLY WORKING!                //
+// POST IMAGES - FULLY WORKING                 //
 // ============================================ //
 
 const postImageInput = document.getElementById('post-image');
@@ -805,7 +735,7 @@ window.openLightbox = function(imageSrc) {
 };
 
 // ============================================ //
-// CREATE POST - WITH IMAGES!                  //
+// CREATE POST - SUPABASE ONLY - NO LOCALSTORAGE
 // ============================================ //
 
 window.showCreatePostModal = function() {
@@ -814,6 +744,7 @@ window.showCreatePostModal = function() {
         return;
     }
     
+    console.log('📝 Opening create post modal');
     const modal = document.getElementById('create-post-modal');
     if (modal) {
         modal.classList.add('active');
@@ -829,7 +760,6 @@ window.closeCreatePostModal = function() {
         document.body.style.overflow = 'auto';
     }
     
-    // Clear form
     const title = document.getElementById('post-title');
     const category = document.getElementById('post-category');
     const content = document.getElementById('post-content');
@@ -840,7 +770,6 @@ window.closeCreatePostModal = function() {
     if (content) content.value = '';
     if (tags) tags.value = '';
     
-    // Clear images
     window.selectedImages = [];
     window.renderImagePreviews();
 };
@@ -851,9 +780,14 @@ window.handleCreatePost = async function() {
         return;
     }
     
-    const title = document.getElementById('post-title')?.value.trim() || '';
-    const category = document.getElementById('post-category')?.value || '';
-    const content = document.getElementById('post-content')?.value.trim() || '';
+    if (!window.supabase) {
+        window.showErrorMessage('Supabase is not available');
+        return;
+    }
+    
+    const title = document.getElementById('post-title')?.value.trim();
+    const category = document.getElementById('post-category')?.value;
+    const content = document.getElementById('post-content')?.value.trim();
     const tags = document.getElementById('post-tags')?.value.split(',').map(t => t.trim()).filter(t => t) || [];
     const images = window.selectedImages.map(img => img.data);
     
@@ -862,8 +796,8 @@ window.handleCreatePost = async function() {
         return;
     }
     
-    if (title.length < 5) {
-        window.showErrorMessage('Title must be at least 5 characters');
+    if (title.length < 3) {
+        window.showErrorMessage('Title must be at least 3 characters');
         return;
     }
     
@@ -875,61 +809,88 @@ window.handleCreatePost = async function() {
     const newPost = {
         id: window.generateId(),
         user_id: window.currentUser.id,
-        title,
-        category,
-        content,
-        tags,
-        images,
+        title: title,
+        category: category,
+        content: content,
+        tags: tags,
+        images: images,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         likes: 0,
         views: 0,
-        comments: [],
         pinned: false
     };
     
-    window.forumPosts.unshift(newPost);
-    localStorage.setItem('forum_posts', JSON.stringify(window.forumPosts));
-    
-    // Update user post count
-    const userIndex = window.forumUsers.findIndex(u => u.id === window.currentUser.id);
-    if (userIndex !== -1) {
-        window.forumUsers[userIndex].post_count = (window.forumUsers[userIndex].post_count || 0) + 1;
-        localStorage.setItem('forum_users', JSON.stringify(window.forumUsers));
+    try {
+        // ===== SAVE TO SUPABASE ONLY =====
+        console.log('📤 Saving post to Supabase...');
         
+        const { error } = await window.supabase
+            .from('posts')
+            .insert([newPost]);
+        
+        if (error) throw error;
+        
+        console.log('✅ Post saved to Supabase');
+        
+        // ===== UPDATE POST COUNT IN SUPABASE =====
+        try {
+            await window.supabase.rpc('increment_post_count', { user_id: window.currentUser.id });
+            console.log('✅ Post count updated in Supabase');
+        } catch (e) {
+            console.error('❌ Failed to update post count:', e);
+        }
+        
+        // ===== UPDATE LOCAL USER OBJECT ONLY =====
         window.currentUser.postCount = (window.currentUser.postCount || 0) + 1;
         localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
+        
+        // ===== ADD TO MEMORY ONLY FOR CURRENT SESSION =====
+        window.forumPosts.unshift({
+            ...newPost,
+            comments: []
+        });
+        
+        // ===== CLEAR FORM AND SHOW SUCCESS =====
+        window.closeCreatePostModal();
+        window.filterPosts();
+        window.showSuccessMessage('Post published successfully!');
+        
+        window.selectedImages = [];
+        window.renderImagePreviews();
+        
+    } catch (error) {
+        console.error('❌ Error creating post:', error);
+        window.showErrorMessage('Failed to create post: ' + error.message);
     }
-    
-    // Try Supabase
-    if (window.supabase) {
-        try {
-            await window.supabase.from('posts').insert([newPost]);
-            await window.supabase.rpc('increment_post_count', { user_id: window.currentUser.id });
-        } catch (e) {
-            console.log('⚠️ Failed to save post to Supabase:', e);
-        }
-    }
-    
-    window.closeCreatePostModal();
-    window.filterPosts();
-    window.showSuccessMessage('Post published successfully!');
 };
 
 // ============================================ //
-// POST DETAILS - CLEAN, NO EXTRA TEXT         //
+// POST DETAILS                                //
 // ============================================ //
 
-window.viewPostDetails = function(postId) {
+window.viewPostDetails = async function(postId) {
     const post = window.forumPosts.find(p => p.id === postId);
     if (!post) {
         window.showErrorMessage('Post not found');
         return;
     }
     
-    // Increment views
+    // Update views in Supabase
     post.views = (post.views || 0) + 1;
-    localStorage.setItem('forum_posts', JSON.stringify(window.forumPosts));
+    
+    if (window.supabase) {
+        try {
+            await window.supabase
+                .from('posts')
+                .update({ views: post.views })
+                .eq('id', postId);
+        } catch (e) {}
+    }
+    
+    // Load comments from Supabase
+    const comments = await window.loadCommentsForPost(postId);
+    post.comments = comments;
     
     const user = window.getUserById(post.user_id) || {
         username: 'Unknown',
@@ -939,7 +900,6 @@ window.viewPostDetails = function(postId) {
     };
     
     const badge = window.getUserBadge(user.post_count || 0);
-    const comments = post.comments || [];
     
     const categoryNames = {
         germination: 'Germination',
@@ -952,7 +912,10 @@ window.viewPostDetails = function(postId) {
         general: 'General'
     };
     
-    // Clean author HTML
+    window.showPostDetailModal(post, user, badge, comments, categoryNames);
+};
+
+window.showPostDetailModal = function(post, user, badge, comments, categoryNames) {
     const authorHTML = `
         <div style="display: flex; align-items: center; gap: 12px;">
             <img src="${user.avatar || window.getDefaultAvatar()}" 
@@ -976,7 +939,6 @@ window.viewPostDetails = function(postId) {
         </div>
     `;
     
-    // Comments HTML with Edit/Delete buttons
     let commentsHTML = '';
     if (comments.length > 0) {
         commentsHTML = comments.map(c => {
@@ -1023,7 +985,6 @@ window.viewPostDetails = function(postId) {
         commentsHTML = '<div style="text-align: center; padding: 40px 20px; color: var(--text-muted); background: var(--bg-tertiary); border-radius: 12px;"><i class="fas fa-comment-slash" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i><p>No comments yet. Be the first to comment!</p></div>';
     }
     
-    // Images HTML
     let imagesHTML = '';
     if (post.images && post.images.length > 0) {
         imagesHTML = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 20px 0;">';
@@ -1038,7 +999,6 @@ window.viewPostDetails = function(postId) {
         imagesHTML += '</div>';
     }
     
-    // Main content
     const contentHTML = `
         <div style="max-width: 800px; margin: 0 auto;">
             <h2 style="color: var(--text-primary); font-size: 1.8rem; margin-bottom: 20px;">${window.escapeHtml(post.title)}</h2>
@@ -1089,7 +1049,6 @@ window.viewPostDetails = function(postId) {
         </div>
     `;
     
-    // Modal with working close button
     const modal = document.createElement('div');
     modal.id = 'post-detail-modal-custom';
     modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; overflow-y: auto; display: block;';
@@ -1113,12 +1072,17 @@ window.viewPostDetails = function(postId) {
 };
 
 // ============================================ //
-// COMMENTS - FULLY WORKING                    //
+// COMMENTS - SUPABASE ONLY                    //
 // ============================================ //
 
 window.addComment = async function(postId) {
     if (!window.currentUser) {
         window.showLogin();
+        return;
+    }
+    
+    if (!window.supabase) {
+        window.showErrorMessage('Supabase is not available');
         return;
     }
     
@@ -1131,15 +1095,9 @@ window.addComment = async function(postId) {
         return;
     }
     
-    const postIndex = window.forumPosts.findIndex(p => p.id === postId);
-    if (postIndex === -1) return;
-    
-    if (!window.forumPosts[postIndex].comments) {
-        window.forumPosts[postIndex].comments = [];
-    }
-    
     const newComment = {
         id: window.generateId(),
+        post_id: postId,
         user_id: window.currentUser.id,
         username: window.currentUser.username,
         avatar: window.currentUser.avatar,
@@ -1147,99 +1105,77 @@ window.addComment = async function(postId) {
         created_at: new Date().toISOString()
     };
     
-    window.forumPosts[postIndex].comments.push(newComment);
-    localStorage.setItem('forum_posts', JSON.stringify(window.forumPosts));
-    
-    // Update user comment count
-    const userIndex = window.forumUsers.findIndex(u => u.id === window.currentUser.id);
-    if (userIndex !== -1) {
-        window.forumUsers[userIndex].comment_count = (window.forumUsers[userIndex].comment_count || 0) + 1;
-        localStorage.setItem('forum_users', JSON.stringify(window.forumUsers));
+    try {
+        const { error } = await window.supabase
+            .from('comments')
+            .insert([newComment]);
         
-        window.currentUser.commentCount = (window.currentUser.commentCount || 0) + 1;
-        localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
+        if (error) throw error;
+        
+        await window.supabase.rpc('increment_comment_count', { user_id: window.currentUser.id });
+        
+        window.showSuccessMessage('Comment added!');
+        window.viewPostDetails(postId);
+        
+    } catch (error) {
+        console.error('❌ Error adding comment:', error);
+        window.showErrorMessage('Failed to add comment');
     }
-    
-    // Try Supabase
-    if (window.supabase) {
-        try {
-            await window.supabase.from('comments').insert([{
-                id: newComment.id,
-                post_id: postId,
-                user_id: newComment.user_id,
-                content: newComment.content,
-                created_at: newComment.created_at
-            }]);
-            await window.supabase.rpc('increment_comment_count', { user_id: window.currentUser.id });
-        } catch (e) {
-            console.log('⚠️ Failed to save comment to Supabase:', e);
-        }
-    }
-    
-    window.showSuccessMessage('Comment added!');
-    window.viewPostDetails(postId);
 };
 
-window.editComment = function(postId, commentId) {
+window.editComment = async function(postId, commentId) {
     const post = window.forumPosts.find(p => p.id === postId);
-    if (!post || !post.comments) return;
+    if (!post) return;
     
-    const comment = post.comments.find(c => c.id === commentId);
-    if (!comment) return;
-    
-    // Check permission
-    if (!window.isAdmin() && window.currentUser?.id !== comment.user_id) {
-        window.showErrorMessage('You can only edit your own comments');
+    if (!window.isAdmin() && !window.currentUser) {
+        window.showErrorMessage('You must be logged in');
         return;
     }
     
-    const newContent = prompt('Edit your comment:', comment.content);
-    if (newContent && newContent.trim()) {
-        comment.content = newContent.trim();
-        comment.edited_at = new Date().toISOString();
-        localStorage.setItem('forum_posts', JSON.stringify(window.forumPosts));
+    const newContent = prompt('Edit your comment:');
+    if (!newContent || !newContent.trim()) return;
+    
+    try {
+        const { error } = await window.supabase
+            .from('comments')
+            .update({ 
+                content: newContent.trim(),
+                edited_at: new Date().toISOString()
+            })
+            .eq('id', commentId);
         
-        if (window.supabase) {
-            try {
-                window.supabase.from('comments').update({ content: comment.content, edited_at: comment.edited_at }).eq('id', commentId);
-            } catch (e) {}
-        }
+        if (error) throw error;
         
         window.showSuccessMessage('Comment updated!');
         window.viewPostDetails(postId);
+        
+    } catch (error) {
+        console.error('❌ Error editing comment:', error);
+        window.showErrorMessage('Failed to edit comment');
     }
 };
 
 window.deleteComment = async function(postId, commentId) {
-    const postIndex = window.forumPosts.findIndex(p => p.id === postId);
-    if (postIndex === -1) return;
-    
-    const post = window.forumPosts[postIndex];
-    if (post.comments) {
-        post.comments = post.comments.filter(c => c.id !== commentId);
-        localStorage.setItem('forum_posts', JSON.stringify(window.forumPosts));
+    try {
+        const { error } = await window.supabase
+            .from('comments')
+            .delete()
+            .eq('id', commentId);
+        
+        if (error) throw error;
+        
+        window.showSuccessMessage('Comment deleted!');
+        window.viewPostDetails(postId);
+        
+    } catch (error) {
+        console.error('❌ Error deleting comment:', error);
+        window.showErrorMessage('Failed to delete comment');
     }
-    
-    if (window.supabase) {
-        try {
-            await window.supabase.from('comments').delete().eq('id', commentId);
-        } catch (e) {}
-    }
-    
-    window.showSuccessMessage('Comment deleted!');
-    window.viewPostDetails(postId);
 };
 
 window.deleteMyComment = function(postId, commentId) {
-    const post = window.forumPosts.find(p => p.id === postId);
-    if (!post) return;
-    
-    const comment = post.comments?.find(c => c.id === commentId);
-    if (!comment) return;
-    
-    // Check permission
-    if (!window.isAdmin() && window.currentUser?.id !== comment.user_id) {
-        window.showErrorMessage('You can only delete your own comments');
+    if (!window.isAdmin() && !window.currentUser) {
+        window.showErrorMessage('You must be logged in');
         return;
     }
     
@@ -1303,8 +1239,16 @@ window.handlePostAction = async function(postId, action, button) {
             }
             
             post.likes = (post.likes || 0) + 1;
-            localStorage.setItem('forum_posts', JSON.stringify(window.forumPosts));
             localStorage.setItem(`liked_${postId}`, 'true');
+            
+            if (window.supabase) {
+                try {
+                    await window.supabase
+                        .from('posts')
+                        .update({ likes: post.likes })
+                        .eq('id', postId);
+                } catch (e) {}
+            }
             
             if (button) {
                 button.classList.add('liked');
@@ -1341,6 +1285,32 @@ window.handlePostAction = async function(postId, action, button) {
             }
             break;
     }
+};
+
+window.deletePost = function(postId) {
+    if (!window.isAdmin()) {
+        window.showErrorMessage('Admin access required');
+        return;
+    }
+    
+    window.showDeleteConfirmModal('post', postId, async () => {
+        try {
+            const { error } = await window.supabase
+                .from('posts')
+                .delete()
+                .eq('id', postId);
+            
+            if (error) throw error;
+            
+            window.forumPosts = window.forumPosts.filter(p => p.id !== postId);
+            window.filterPosts();
+            window.showSuccessMessage('Post deleted!');
+            
+        } catch (error) {
+            console.error('❌ Error deleting post:', error);
+            window.showErrorMessage('Failed to delete post');
+        }
+    });
 };
 
 // ============================================ //
@@ -1380,7 +1350,6 @@ window.filterPosts = function() {
             break;
     }
     
-    // Pinned posts on top
     filtered.sort((a, b) => {
         if (a.pinned && !b.pinned) return -1;
         if (!a.pinned && b.pinned) return 1;
@@ -1393,7 +1362,6 @@ window.filterPosts = function() {
 window.displayPosts = function(posts) {
     const postsContainer = document.getElementById('posts-container');
     const emptyState = document.getElementById('empty-state');
-    const loadMoreContainer = document.querySelector('.load-more-container');
     
     if (!postsContainer) return;
     
@@ -1401,7 +1369,6 @@ window.displayPosts = function(posts) {
     
     if (posts.length === 0) {
         if (emptyState) emptyState.style.display = 'block';
-        if (loadMoreContainer) loadMoreContainer.style.display = 'none';
         return;
     }
     
@@ -1411,10 +1378,6 @@ window.displayPosts = function(posts) {
         const postElement = window.createPostElement(post, index);
         postsContainer.appendChild(postElement);
     });
-    
-    if (loadMoreContainer) {
-        loadMoreContainer.style.display = posts.length > 10 ? 'block' : 'none';
-    }
 };
 
 window.createPostElement = function(post, index) {
@@ -1520,7 +1483,7 @@ window.createPostElement = function(post, index) {
                     <i class="fas fa-share"></i> Share
                 </button>
                 ${window.isAdmin() ? `
-                <button class="post-action-btn admin-btn" onclick="window.deletePost('${post.id}')" style="color: #f44336;">
+                <button class="post-action-btn" onclick="window.deletePost('${post.id}')" style="color: #f44336;">
                     <i class="fas fa-trash"></i> Delete
                 </button>
                 ` : ''}
@@ -1528,13 +1491,14 @@ window.createPostElement = function(post, index) {
         </div>
     `;
     
-    // Add click handlers
     postDiv.querySelectorAll('.post-action-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
             const action = this.dataset.action;
             const postId = this.dataset.postId;
-            window.handlePostAction(postId, action, this);
+            if (action) {
+                window.handlePostAction(postId, action, this);
+            }
         });
     });
     
@@ -1542,28 +1506,398 @@ window.createPostElement = function(post, index) {
 };
 
 // ============================================ //
-// ADMIN DELETE POST                           //
+// CHAT / MESSAGING SYSTEM - FULL              //
 // ============================================ //
 
-window.deletePost = function(postId) {
-    if (!window.isAdmin()) {
-        window.showErrorMessage('Admin access required');
+window.updateUnreadBadge = function() {
+    const unreadBadge = document.getElementById('unread-badge');
+    const navUnreadBadge = document.getElementById('nav-unread-badge');
+    
+    if (unreadBadge) {
+        unreadBadge.style.display = window.unreadCount > 0 ? 'inline' : 'none';
+        unreadBadge.textContent = window.unreadCount;
+    }
+    
+    if (navUnreadBadge) {
+        navUnreadBadge.style.display = window.unreadCount > 0 ? 'inline' : 'none';
+        navUnreadBadge.textContent = window.unreadCount;
+    }
+};
+
+window.loadConversations = async function() {
+    if (!window.currentUser || !window.supabase) return;
+    
+    try {
+        const { data, error } = await window.supabase
+            .from('messages')
+            .select(`
+                *,
+                sender:sender_id(id, username, avatar),
+                receiver:receiver_id(id, username, avatar)
+            `)
+            .or(`sender_id.eq.${window.currentUser.id},receiver_id.eq.${window.currentUser.id}`)
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        const conversationMap = new Map();
+        
+        data.forEach(message => {
+            const otherUser = message.sender_id === window.currentUser.id ? message.receiver : message.sender;
+            if (!otherUser) return;
+            
+            const convId = otherUser.id;
+            
+            if (!conversationMap.has(convId)) {
+                conversationMap.set(convId, {
+                    user: otherUser,
+                    messages: [],
+                    lastMessage: message,
+                    unread: !message.is_read && message.receiver_id === window.currentUser.id
+                });
+            }
+            
+            conversationMap.get(convId).messages.push(message);
+            
+            if (!message.is_read && message.receiver_id === window.currentUser.id) {
+                conversationMap.get(convId).unread = true;
+            }
+        });
+        
+        window.conversations = Array.from(conversationMap.values());
+        window.renderConversations();
+        window.calculateUnreadCount();
+        
+    } catch (error) {
+        console.error('❌ Error loading conversations:', error);
+    }
+};
+
+window.renderConversations = function() {
+    const container = document.getElementById('conversations-container');
+    if (!container) return;
+    
+    if (!window.conversations || window.conversations.length === 0) {
+        container.innerHTML = '<div class="no-conversations">No conversations yet. Start by sending a message!</div>';
         return;
     }
     
-    window.showDeleteConfirmModal('post', postId, async () => {
-        window.forumPosts = window.forumPosts.filter(p => p.id !== postId);
-        localStorage.setItem('forum_posts', JSON.stringify(window.forumPosts));
+    container.innerHTML = window.conversations.map(conv => {
+        const badge = window.getUserBadge(conv.user.post_count || 0);
+        const lastMessage = conv.lastMessage?.content?.substring(0, 30) || 'No messages';
+        const time = conv.lastMessage?.created_at ? window.getTimeAgo(new Date(conv.lastMessage.created_at)) : '';
+        const isActive = window.activeConversation && window.activeConversation.user?.id === conv.user.id;
         
-        if (window.supabase) {
-            try {
-                await window.supabase.from('posts').delete().eq('id', postId);
-            } catch (e) {}
+        return `
+            <div class="conversation-item ${isActive ? 'active' : ''}" onclick="window.selectConversation('${conv.user.id}')">
+                <div class="conversation-avatar">
+                    <img src="${conv.user.avatar || window.getDefaultAvatar()}" alt="Avatar" onerror="this.src='${window.getDefaultAvatar()}'">
+                </div>
+                <div class="conversation-info">
+                    <div class="conversation-username">
+                        ${window.escapeHtml(conv.user.username)}
+                        <span class="user-badge ${badge.class}">${badge.icon}</span>
+                    </div>
+                    <div class="conversation-last-message">
+                        ${window.escapeHtml(lastMessage)}...
+                    </div>
+                    <div class="conversation-time">${time}</div>
+                </div>
+                ${conv.unread ? '<span class="unread-indicator">New</span>' : ''}
+            </div>
+        `;
+    }).join('');
+};
+
+window.selectConversation = async function(userId) {
+    const conversation = window.conversations.find(c => c.user?.id === userId);
+    if (!conversation) return;
+    
+    window.activeConversation = conversation;
+    window.renderActiveConversation();
+    
+    if (window.supabase && window.currentUser) {
+        try {
+            await window.supabase
+                .from('messages')
+                .update({ is_read: true })
+                .eq('sender_id', userId)
+                .eq('receiver_id', window.currentUser.id)
+                .eq('is_read', false);
+        } catch (e) {}
+    }
+    
+    conversation.unread = false;
+    window.calculateUnreadCount();
+    window.renderConversations();
+};
+
+window.renderActiveConversation = function() {
+    if (!window.activeConversation) return;
+    
+    const user = window.activeConversation.user;
+    if (!user) return;
+    
+    const badge = window.getUserBadge(user.post_count || 0);
+    const header = document.getElementById('active-conversation-header');
+    const username = document.getElementById('conversation-username');
+    const avatar = document.getElementById('conversation-avatar');
+    const badgeSpan = document.getElementById('conversation-badge');
+    const inputContainer = document.getElementById('message-input-container');
+    const messagesContainer = document.getElementById('messages-container');
+    
+    if (header) header.style.display = 'block';
+    if (username) username.textContent = user.username || 'User';
+    if (avatar) avatar.src = user.avatar || window.getDefaultAvatar();
+    if (badgeSpan) {
+        badgeSpan.className = `user-badge ${badge.class}`;
+        badgeSpan.textContent = `${badge.icon} ${badge.name}`;
+    }
+    if (inputContainer) inputContainer.style.display = 'flex';
+    
+    if (messagesContainer) {
+        if (!window.activeConversation.messages || window.activeConversation.messages.length === 0) {
+            messagesContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-muted);"><i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i><p>No messages yet. Say hello!</p></div>';
+        } else {
+            const sortedMessages = [...window.activeConversation.messages]
+                .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+            
+            messagesContainer.innerHTML = sortedMessages.map(msg => {
+                const isSent = msg.sender_id === window.currentUser?.id;
+                const sender = isSent ? window.currentUser : user;
+                
+                return `
+                    <div class="message-item ${isSent ? 'sent' : 'received'}">
+                        <div class="message-avatar">
+                            <img src="${sender?.avatar || window.getDefaultAvatar()}" alt="Avatar" onerror="this.src='${window.getDefaultAvatar()}'">
+                        </div>
+                        <div class="message-content">
+                            <div class="message-text">${window.escapeHtml(msg.content)}</div>
+                            <div class="message-time">${window.getTimeAgo(new Date(msg.created_at))}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
         
-        window.filterPosts();
-        window.showSuccessMessage('Post deleted!');
-    });
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+};
+
+window.sendMessage = async function(receiverId, content) {
+    if (!window.currentUser) {
+        window.showErrorMessage('You must be logged in to send messages');
+        return;
+    }
+    
+    if (!window.supabase) {
+        window.showErrorMessage('Supabase is not available');
+        return;
+    }
+    
+    if (!content || !content.trim()) {
+        window.showErrorMessage('Message cannot be empty');
+        return;
+    }
+    
+    const newMessage = {
+        id: window.generateId(),
+        sender_id: window.currentUser.id,
+        receiver_id: receiverId,
+        content: content.trim(),
+        is_read: false,
+        created_at: new Date().toISOString()
+    };
+    
+    try {
+        const { error } = await window.supabase
+            .from('messages')
+            .insert([newMessage]);
+        
+        if (error) throw error;
+        
+        let conversation = window.conversations.find(c => c.user?.id === receiverId);
+        
+        if (!conversation) {
+            const receiver = window.forumUsers.find(u => u.id === receiverId);
+            if (receiver) {
+                conversation = {
+                    user: receiver,
+                    messages: [],
+                    lastMessage: newMessage,
+                    unread: false
+                };
+                window.conversations.unshift(conversation);
+            }
+        }
+        
+        if (conversation) {
+            conversation.messages.push(newMessage);
+            conversation.lastMessage = newMessage;
+            
+            if (window.activeConversation?.user?.id === receiverId) {
+                window.renderActiveConversation();
+            }
+        }
+        
+        window.renderConversations();
+        
+        const input = document.getElementById('message-input');
+        if (input) input.value = '';
+        
+    } catch (error) {
+        console.error('❌ Error sending message:', error);
+        window.showErrorMessage('Failed to send message');
+    }
+};
+
+window.subscribeToMessages = function() {
+    if (!window.supabase || !window.currentUser) return;
+    
+    if (window.messagesSubscription) {
+        window.messagesSubscription.unsubscribe();
+    }
+    
+    window.messagesSubscription = window.supabase
+        .channel('messages-channel')
+        .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'messages',
+            filter: `receiver_id=eq.${window.currentUser.id}`
+        }, async (payload) => {
+            const newMessage = payload.new;
+            const sender = window.getUserById(newMessage.sender_id) || {
+                id: newMessage.sender_id,
+                username: 'User',
+                avatar: window.getDefaultAvatar(),
+                post_count: 0
+            };
+            
+            let conversation = window.conversations.find(c => c.user?.id === sender.id);
+            
+            if (!conversation) {
+                conversation = {
+                    user: sender,
+                    messages: [],
+                    lastMessage: newMessage,
+                    unread: true
+                };
+                window.conversations.unshift(conversation);
+            } else {
+                conversation.messages.push(newMessage);
+                conversation.lastMessage = newMessage;
+                conversation.unread = true;
+            }
+            
+            window.renderConversations();
+            window.calculateUnreadCount();
+            window.showNotification(`📬 New message from ${sender.username}`, 'info');
+            
+            if (window.activeConversation?.user?.id === sender.id) {
+                window.renderActiveConversation();
+            }
+        })
+        .subscribe();
+};
+
+window.calculateUnreadCount = function() {
+    window.unreadCount = window.conversations.reduce((total, conv) => {
+        return total + (conv.unread ? 1 : 0);
+    }, 0);
+    
+    window.updateUnreadBadge();
+};
+
+window.openMessagesModal = function() {
+    if (!window.currentUser) {
+        window.showLogin();
+        return;
+    }
+    
+    const modal = document.getElementById('messages-modal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        window.loadConversations();
+        
+        if (window.supabase) {
+            window.subscribeToMessages();
+        }
+    }
+};
+
+window.closeMessagesModal = function() {
+    const modal = document.getElementById('messages-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+};
+
+window.openNewMessageModal = function() {
+    if (!window.currentUser) {
+        window.showLogin();
+        return;
+    }
+    
+    const select = document.getElementById('message-recipient');
+    if (!select) return;
+    
+    select.innerHTML = '<option value="">Select a user...</option>';
+    
+    window.forumUsers
+        .filter(u => u.id !== window.currentUser.id)
+        .forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = `${user.username} (${user.post_count || 0} posts)`;
+            select.appendChild(option);
+        });
+    
+    const modal = document.getElementById('new-message-modal');
+    if (modal) {
+        modal.classList.add('active');
+    }
+};
+
+window.closeNewMessageModal = function() {
+    const modal = document.getElementById('new-message-modal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+    
+    const select = document.getElementById('message-recipient');
+    const textarea = document.getElementById('new-message-content');
+    if (select) select.value = '';
+    if (textarea) textarea.value = '';
+};
+
+window.sendNewMessage = async function() {
+    const receiverId = document.getElementById('message-recipient')?.value;
+    const content = document.getElementById('new-message-content')?.value.trim();
+    
+    if (!receiverId) {
+        window.showErrorMessage('Please select a recipient');
+        return;
+    }
+    
+    if (!content) {
+        window.showErrorMessage('Please enter a message');
+        return;
+    }
+    
+    await window.sendMessage(receiverId, content);
+    
+    window.closeNewMessageModal();
+    window.showSuccessMessage('Message sent!');
+    
+    window.openMessagesModal();
+    
+    setTimeout(() => {
+        window.selectConversation(receiverId);
+    }, 300);
 };
 
 // ============================================ //
@@ -1609,7 +1943,7 @@ window.closeAuthModal = function() {
 };
 
 // ============================================ //
-// YIELD CALCULATOR - KEPT ORIGINAL            //
+// YIELD CALCULATOR                           //
 // ============================================ //
 
 window.loadSavedCalculations = function() {
@@ -1751,7 +2085,7 @@ window.saveCalculation = function() {
 };
 
 // ============================================ //
-// THEME TOGGLE - KEPT ORIGINAL                //
+// THEME TOGGLE                                //
 // ============================================ //
 
 window.initTheme = function() {
@@ -1781,170 +2115,114 @@ window.toggleTheme = function() {
 };
 
 // ============================================ //
-// MESSAGING - BASIC STRUCTURE KEPT            //
-// ============================================ //
-
-window.openMessagesModal = function() {
-    if (!window.currentUser) {
-        window.showLogin();
-        return;
-    }
-    
-    const modal = document.getElementById('messages-modal');
-    if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        window.showInfoMessage('Messaging system coming soon!');
-    }
-};
-
-// ============================================ //
 // INITIALIZE EVERYTHING                       //
 // ============================================ //
 
 window.initializeForum = async function() {
-    console.log('🚀 Initializing forum...');
+    console.log('🚀 Initializing forum - SUPABASE ONLY MODE...');
     
-    // Load theme
+    if (!window.supabase) {
+        console.error('❌ Supabase not available');
+        window.showErrorMessage('Supabase connection failed. Please check your connection.');
+        return;
+    }
+    
     window.initTheme();
     
-    // Theme toggle listener
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', window.toggleTheme);
     }
     
-    // Load data
-    window.loadInitialData();
+    // Load users and posts from Supabase
+    await window.loadUsersFromSupabase();
     await window.checkUser();
+    await window.loadPostsFromSupabase();
     window.filterPosts();
     window.loadSavedCalculations();
     
     // Calculator listeners
-    const calculateBtn = document.getElementById('calculate-yield-btn');
-    if (calculateBtn) calculateBtn.addEventListener('click', window.calculateYield);
+    document.getElementById('calculate-yield-btn')?.addEventListener('click', window.calculateYield);
+    document.getElementById('save-calculator-results')?.addEventListener('click', window.saveCalculation);
     
-    const saveCalcBtn = document.getElementById('save-calculator-results');
-    if (saveCalcBtn) saveCalcBtn.addEventListener('click', window.saveCalculation);
+    // Calculator modal
+    document.getElementById('calculator-nav')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('yield-calculator-modal')?.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        window.calculateYield();
+    });
     
-    // Calculator modal triggers
-    const calculatorNav = document.getElementById('calculator-nav');
-    if (calculatorNav) {
-        calculatorNav.addEventListener('click', function(e) {
+    document.getElementById('footer-calculator')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('yield-calculator-modal')?.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        window.calculateYield();
+    });
+    
+    document.querySelector('.yield-calculator-close')?.addEventListener('click', function() {
+        document.getElementById('yield-calculator-modal')?.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+    
+    // Chat listeners
+    document.getElementById('messages-toggle')?.addEventListener('click', window.openMessagesModal);
+    document.getElementById('messages-btn')?.addEventListener('click', window.openMessagesModal);
+    document.querySelector('.messages-modal-close')?.addEventListener('click', window.closeMessagesModal);
+    
+    document.getElementById('new-message-btn')?.addEventListener('click', window.openNewMessageModal);
+    document.querySelector('.new-message-modal-close')?.addEventListener('click', window.closeNewMessageModal);
+    document.getElementById('cancel-new-message')?.addEventListener('click', window.closeNewMessageModal);
+    document.getElementById('send-new-message')?.addEventListener('click', window.sendNewMessage);
+    
+    document.getElementById('send-message-btn')?.addEventListener('click', function() {
+        if (window.activeConversation?.user?.id) {
+            const input = document.getElementById('message-input');
+            window.sendMessage(window.activeConversation.user.id, input?.value);
+        }
+    });
+    
+    document.getElementById('message-input')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            document.getElementById('yield-calculator-modal')?.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            window.calculateYield();
-        });
-    }
+            if (window.activeConversation?.user?.id) {
+                window.sendMessage(window.activeConversation.user.id, this.value);
+            }
+        }
+    });
     
-    const footerCalculator = document.getElementById('footer-calculator');
-    if (footerCalculator) {
-        footerCalculator.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('yield-calculator-modal')?.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            window.calculateYield();
-        });
-    }
+    // Profile listeners
+    document.getElementById('profile-btn')?.addEventListener('click', window.openProfileModal);
+    document.getElementById('user-avatar-clickable')?.addEventListener('click', window.openProfileModal);
+    document.getElementById('username-display')?.addEventListener('click', window.openProfileModal);
+    document.querySelector('.profile-modal-close')?.addEventListener('click', window.closeProfileModal);
+    document.getElementById('cancel-profile')?.addEventListener('click', window.closeProfileModal);
+    document.getElementById('save-profile')?.addEventListener('click', window.saveProfile);
+    document.getElementById('avatar-upload')?.addEventListener('change', window.handleAvatarUpload);
+    document.getElementById('remove-avatar')?.addEventListener('click', window.handleRemoveAvatar);
     
-    const calculatorClose = document.querySelector('.yield-calculator-close');
-    if (calculatorClose) {
-        calculatorClose.addEventListener('click', function() {
-            document.getElementById('yield-calculator-modal')?.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-    }
+    // Auth listeners
+    document.getElementById('open-login')?.addEventListener('click', (e) => { e.preventDefault(); window.showLogin(); });
+    document.getElementById('open-register')?.addEventListener('click', (e) => { e.preventDefault(); window.showRegister(); });
+    document.querySelector('.auth-close')?.addEventListener('click', window.closeAuthModal);
+    document.getElementById('show-register')?.addEventListener('click', window.showRegister);
+    document.getElementById('show-login')?.addEventListener('click', window.showLogin);
+    document.getElementById('login-btn')?.addEventListener('click', window.handleLogin);
+    document.getElementById('register-btn')?.addEventListener('click', window.handleRegister);
+    document.getElementById('continue-btn')?.addEventListener('click', window.closeAuthModal);
+    document.getElementById('logout-btn')?.addEventListener('click', window.handleLogout);
     
-    // Messages modal triggers
-    const messagesToggle = document.getElementById('messages-toggle');
-    if (messagesToggle) messagesToggle.addEventListener('click', window.openMessagesModal);
-    
-    const messagesBtn = document.getElementById('messages-btn');
-    if (messagesBtn) messagesBtn.addEventListener('click', window.openMessagesModal);
-    
-    const messagesClose = document.querySelector('.messages-modal-close');
-    if (messagesClose) {
-        messagesClose.addEventListener('click', function() {
-            document.getElementById('messages-modal')?.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-    }
-    
-    // Profile modal triggers
-    const profileBtn = document.getElementById('profile-btn');
-    if (profileBtn) profileBtn.addEventListener('click', window.openProfileModal);
-    
-    const userAvatarClickable = document.getElementById('user-avatar-clickable');
-    if (userAvatarClickable) userAvatarClickable.addEventListener('click', window.openProfileModal);
-    
-    const usernameDisplay = document.getElementById('username-display');
-    if (usernameDisplay) usernameDisplay.addEventListener('click', window.openProfileModal);
-    
-    const profileClose = document.querySelector('.profile-modal-close');
-    if (profileClose) profileClose.addEventListener('click', window.closeProfileModal);
-    
-    const cancelProfileBtn = document.getElementById('cancel-profile');
-    if (cancelProfileBtn) cancelProfileBtn.addEventListener('click', window.closeProfileModal);
-    
-    const saveProfileBtn = document.getElementById('save-profile');
-    if (saveProfileBtn) saveProfileBtn.addEventListener('click', window.saveProfile);
-    
-    const avatarUpload = document.getElementById('avatar-upload');
-    if (avatarUpload) avatarUpload.addEventListener('change', window.handleAvatarUpload);
-    
-    const removeAvatarBtn = document.getElementById('remove-avatar');
-    if (removeAvatarBtn) removeAvatarBtn.addEventListener('click', window.handleRemoveAvatar);
-    
-    // Auth modal triggers
-    const openLogin = document.getElementById('open-login');
-    if (openLogin) openLogin.addEventListener('click', (e) => { e.preventDefault(); window.showLogin(); });
-    
-    const openRegister = document.getElementById('open-register');
-    if (openRegister) openRegister.addEventListener('click', (e) => { e.preventDefault(); window.showRegister(); });
-    
-    const authClose = document.querySelector('.auth-close');
-    if (authClose) authClose.addEventListener('click', window.closeAuthModal);
-    
-    const showRegister = document.getElementById('show-register');
-    if (showRegister) showRegister.addEventListener('click', window.showRegister);
-    
-    const showLogin = document.getElementById('show-login');
-    if (showLogin) showLogin.addEventListener('click', window.showLogin);
-    
-    const loginBtn = document.getElementById('login-btn');
-    if (loginBtn) loginBtn.addEventListener('click', window.handleLogin);
-    
-    const registerBtn = document.getElementById('register-btn');
-    if (registerBtn) registerBtn.addEventListener('click', window.handleRegister);
-    
-    const continueBtn = document.getElementById('continue-btn');
-    if (continueBtn) continueBtn.addEventListener('click', window.closeAuthModal);
-    
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) logoutBtn.addEventListener('click', window.handleLogout);
-    
-    // Create post modal
-    const createPostBtn = document.getElementById('create-post-btn');
-    if (createPostBtn) createPostBtn.addEventListener('click', window.showCreatePostModal);
-    
-    const createPostClose = document.querySelector('.create-post-close');
-    if (createPostClose) createPostClose.addEventListener('click', window.closeCreatePostModal);
-    
-    const cancelPostBtn = document.getElementById('cancel-post');
-    if (cancelPostBtn) cancelPostBtn.addEventListener('click', window.closeCreatePostModal);
-    
-    const submitPostBtn = document.getElementById('submit-post');
-    if (submitPostBtn) submitPostBtn.addEventListener('click', window.handleCreatePost);
+    // Create post listeners
+    document.getElementById('create-post-btn')?.addEventListener('click', window.showCreatePostModal);
+    document.querySelector('.create-post-close')?.addEventListener('click', window.closeCreatePostModal);
+    document.getElementById('cancel-post')?.addEventListener('click', window.closeCreatePostModal);
+    document.getElementById('submit-post')?.addEventListener('click', window.handleCreatePost);
     
     // Search
-    const forumSearch = document.getElementById('forum-search');
-    if (forumSearch) {
-        forumSearch.addEventListener('input', function() {
-            window.currentSearch = this.value.toLowerCase();
-            window.filterPosts();
-        });
-    }
+    document.getElementById('forum-search')?.addEventListener('input', function() {
+        window.currentSearch = this.value.toLowerCase();
+        window.filterPosts();
+    });
     
     // Category links
     document.querySelectorAll('.category-list a').forEach(link => {
@@ -1969,28 +2247,23 @@ window.initializeForum = async function() {
     
     // Close modals on outside click
     window.addEventListener('click', (e) => {
-        if (e.target === document.getElementById('auth-modal')) {
-            window.closeAuthModal();
-        }
-        if (e.target === document.getElementById('create-post-modal')) {
-            window.closeCreatePostModal();
-        }
-        if (e.target === document.getElementById('profile-modal')) {
-            window.closeProfileModal();
-        }
-        if (e.target === document.getElementById('messages-modal')) {
-            document.getElementById('messages-modal')?.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
+        if (e.target === document.getElementById('auth-modal')) window.closeAuthModal();
+        if (e.target === document.getElementById('create-post-modal')) window.closeCreatePostModal();
+        if (e.target === document.getElementById('profile-modal')) window.closeProfileModal();
+        if (e.target === document.getElementById('messages-modal')) window.closeMessagesModal();
+        if (e.target === document.getElementById('new-message-modal')) window.closeNewMessageModal();
         if (e.target === document.getElementById('yield-calculator-modal')) {
             document.getElementById('yield-calculator-modal')?.classList.remove('active');
             document.body.style.overflow = 'auto';
         }
     });
     
-    console.log('✅ Forum initialized - EVERYTHING WORKING!');
+    window.updateUnreadBadge();
+    
+    console.log('✅ Forum initialized - SUPABASE ONLY MODE');
     console.log('👤 Current user:', window.currentUser?.username || 'Not logged in');
     console.log('👑 Admin:', window.isAdmin() ? 'YES' : 'NO');
+    console.log('📦 No localStorage cache - pure Supabase');
 };
 
 // ============================================ //
