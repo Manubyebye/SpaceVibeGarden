@@ -1,6 +1,6 @@
 // ============================================ //
 // SPACE VIBE GARDEN FORUM - ULTIMATE FINAL     //
-// SUPABASE ONLY - NO LOCALSTORAGE CACHE        //
+// SUPABASE ONLY - WORKING STATS               //
 // EVERYTHING WORKS - POSTS, IMAGES, CHAT      //
 // ============================================ //
 
@@ -192,6 +192,53 @@ window.loadCommentsForPost = async function(postId) {
 };
 
 // ============================================ //
+// UPDATE FORUM STATS FROM SUPABASE            //
+// ============================================ //
+
+window.updateForumStats = async function() {
+    if (!window.supabase) return;
+    
+    try {
+        // Get total posts count
+        const { count: postsCount, error: postsError } = await window.supabase
+            .from('posts')
+            .select('*', { count: 'exact', head: true });
+        
+        if (postsError) throw postsError;
+        
+        // Get total users count
+        const { count: usersCount, error: usersError } = await window.supabase
+            .from('profiles')
+            .select('*', { count: 'exact', head: true });
+        
+        if (usersError) throw usersError;
+        
+        // Get total comments count
+        const { count: commentsCount, error: commentsError } = await window.supabase
+            .from('comments')
+            .select('*', { count: 'exact', head: true });
+        
+        if (commentsError) throw commentsError;
+        
+        // Update the DOM
+        const totalPostsEl = document.getElementById('total-posts');
+        const totalUsersEl = document.getElementById('total-users');
+        const totalCommentsEl = document.getElementById('total-comments');
+        const totalMessagesEl = document.getElementById('total-messages');
+        
+        if (totalPostsEl) totalPostsEl.textContent = postsCount || 0;
+        if (totalUsersEl) totalUsersEl.textContent = usersCount || 0;
+        if (totalCommentsEl) totalCommentsEl.textContent = commentsCount || 0;
+        if (totalMessagesEl) totalMessagesEl.textContent = window.unreadCount || 0;
+        
+        console.log('📊 Forum stats updated:', { postsCount, usersCount, commentsCount });
+        
+    } catch (error) {
+        console.error('❌ Error updating forum stats:', error);
+    }
+};
+
+// ============================================ //
 // AUTH FUNCTIONS - SUPABASE ONLY              //
 // ============================================ //
 
@@ -220,7 +267,6 @@ window.checkUser = async function() {
                     join_date: profile.join_date || new Date().toISOString()
                 };
                 
-                // Only store current user in localStorage, nothing else
                 localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
             }
         }
@@ -288,6 +334,7 @@ window.handleLogin = async function() {
                 
                 window.updateUserInterface();
                 await window.loadPostsFromSupabase();
+                await window.updateForumStats();
                 window.filterPosts();
                 window.showSuccessMessage(`Welcome back, ${window.currentUser.username}!`);
                 
@@ -383,6 +430,7 @@ window.handleRegister = async function() {
             document.getElementById('success-detail').textContent = `Welcome, ${username}!`;
             
             window.updateUserInterface();
+            await window.updateForumStats();
             window.showSuccessMessage(`Welcome, ${username}!`);
             
             setTimeout(() => {
@@ -417,6 +465,7 @@ window.handleLogout = async function() {
     localStorage.removeItem('forum_current_user');
     window.updateUserInterface();
     window.updateUnreadBadge();
+    await window.updateForumStats();
     window.showSuccessMessage('Logged out!');
     window.filterPosts();
 };
@@ -622,7 +671,6 @@ window.saveProfile = async function() {
         window.closeProfileModal();
         window.updateUserInterface();
         
-        // Refresh users list
         await window.loadUsersFromSupabase();
         
     } catch (error) {
@@ -822,7 +870,6 @@ window.handleCreatePost = async function() {
     };
     
     try {
-        // ===== SAVE TO SUPABASE ONLY =====
         console.log('📤 Saving post to Supabase...');
         
         const { error } = await window.supabase
@@ -833,7 +880,6 @@ window.handleCreatePost = async function() {
         
         console.log('✅ Post saved to Supabase');
         
-        // ===== UPDATE POST COUNT IN SUPABASE =====
         try {
             await window.supabase.rpc('increment_post_count', { user_id: window.currentUser.id });
             console.log('✅ Post count updated in Supabase');
@@ -841,18 +887,16 @@ window.handleCreatePost = async function() {
             console.error('❌ Failed to update post count:', e);
         }
         
-        // ===== UPDATE LOCAL USER OBJECT ONLY =====
         window.currentUser.postCount = (window.currentUser.postCount || 0) + 1;
         localStorage.setItem('forum_current_user', JSON.stringify(window.currentUser));
         
-        // ===== ADD TO MEMORY ONLY FOR CURRENT SESSION =====
         window.forumPosts.unshift({
             ...newPost,
             comments: []
         });
         
-        // ===== CLEAR FORM AND SHOW SUCCESS =====
         window.closeCreatePostModal();
+        await window.updateForumStats();
         window.filterPosts();
         window.showSuccessMessage('Post published successfully!');
         
@@ -876,7 +920,6 @@ window.viewPostDetails = async function(postId) {
         return;
     }
     
-    // Update views in Supabase
     post.views = (post.views || 0) + 1;
     
     if (window.supabase) {
@@ -888,7 +931,6 @@ window.viewPostDetails = async function(postId) {
         } catch (e) {}
     }
     
-    // Load comments from Supabase
     const comments = await window.loadCommentsForPost(postId);
     post.comments = comments;
     
@@ -1115,6 +1157,7 @@ window.addComment = async function(postId) {
         await window.supabase.rpc('increment_comment_count', { user_id: window.currentUser.id });
         
         window.showSuccessMessage('Comment added!');
+        await window.updateForumStats();
         window.viewPostDetails(postId);
         
     } catch (error) {
@@ -1165,6 +1208,7 @@ window.deleteComment = async function(postId, commentId) {
         if (error) throw error;
         
         window.showSuccessMessage('Comment deleted!');
+        await window.updateForumStats();
         window.viewPostDetails(postId);
         
     } catch (error) {
@@ -1303,6 +1347,7 @@ window.deletePost = function(postId) {
             if (error) throw error;
             
             window.forumPosts = window.forumPosts.filter(p => p.id !== postId);
+            await window.updateForumStats();
             window.filterPosts();
             window.showSuccessMessage('Post deleted!');
             
@@ -2119,7 +2164,7 @@ window.toggleTheme = function() {
 // ============================================ //
 
 window.initializeForum = async function() {
-    console.log('🚀 Initializing forum - SUPABASE ONLY MODE...');
+    console.log('🚀 Initializing forum - SUPABASE ONLY MODE WITH STATS...');
     
     if (!window.supabase) {
         console.error('❌ Supabase not available');
@@ -2138,6 +2183,7 @@ window.initializeForum = async function() {
     await window.loadUsersFromSupabase();
     await window.checkUser();
     await window.loadPostsFromSupabase();
+    await window.updateForumStats(); // ← STATS LOAD HERE!
     window.filterPosts();
     window.loadSavedCalculations();
     
@@ -2260,10 +2306,10 @@ window.initializeForum = async function() {
     
     window.updateUnreadBadge();
     
-    console.log('✅ Forum initialized - SUPABASE ONLY MODE');
+    console.log('✅ Forum initialized - SUPABASE ONLY MODE WITH STATS');
     console.log('👤 Current user:', window.currentUser?.username || 'Not logged in');
     console.log('👑 Admin:', window.isAdmin() ? 'YES' : 'NO');
-    console.log('📦 No localStorage cache - pure Supabase');
+    console.log('📊 Stats: Updating from Supabase...');
 };
 
 // ============================================ //
