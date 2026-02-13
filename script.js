@@ -402,3 +402,218 @@ if (loadMoreBtn) {
         }, 1500);
     });
 }
+
+// Partners Carousel
+document.addEventListener('DOMContentLoaded', function() {
+    initPartnersCarousel();
+});
+
+function initPartnersCarousel() {
+    const track = document.getElementById('partnersTrack');
+    const prevBtn = document.querySelector('.partner-prev');
+    const nextBtn = document.querySelector('.partner-next');
+    const dots = document.querySelectorAll('.partner-dot');
+    
+    if (!track || !prevBtn || !nextBtn) return;
+    
+    let currentIndex = 0;
+    const slides = document.querySelectorAll('.partner-slide');
+    const totalSlides = document.querySelectorAll('.partner-slide').length / 2; // Because we duplicated for infinite effect
+    const slidesToShow = getSlidesToShow();
+    const slideWidth = 100 / slidesToShow;
+    
+    // Set initial position
+    updateCarousel();
+    
+    // Auto-scroll functionality (optional)
+    let autoScrollInterval;
+    let isAutoScrolling = true;
+    
+    function startAutoScroll() {
+        if (isAutoScrolling) {
+            autoScrollInterval = setInterval(() => {
+                nextSlide();
+            }, 4000);
+        }
+    }
+    
+    function stopAutoScroll() {
+        clearInterval(autoScrollInterval);
+    }
+    
+    function getSlidesToShow() {
+        if (window.innerWidth <= 768) return 1;
+        if (window.innerWidth <= 992) return 2;
+        return 3;
+    }
+    
+    function nextSlide() {
+        if (currentIndex < totalSlides - 1) {
+            currentIndex++;
+        } else {
+            // Jump to first slide instantly for infinite loop
+            currentIndex = 0;
+            track.style.transition = 'none';
+            updateCarousel();
+            setTimeout(() => {
+                track.style.transition = 'transform 0.5s ease-in-out';
+            }, 50);
+        }
+        updateCarousel();
+        updateDots();
+    }
+    
+    function prevSlide() {
+        if (currentIndex > 0) {
+            currentIndex--;
+        } else {
+            // Jump to last slide for infinite loop
+            currentIndex = totalSlides - 1;
+            track.style.transition = 'none';
+            updateCarousel();
+            setTimeout(() => {
+                track.style.transition = 'transform 0.5s ease-in-out';
+            }, 50);
+        }
+        updateCarousel();
+        updateDots();
+    }
+    
+    function updateCarousel() {
+        const shiftPercentage = currentIndex * slideWidth;
+        track.style.transform = `translateX(-${shiftPercentage}%)`;
+    }
+    
+    function updateDots() {
+        dots.forEach((dot, index) => {
+            if (index === currentIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+    
+    // Event listeners
+    prevBtn.addEventListener('click', () => {
+        prevSlide();
+        stopAutoScroll();
+        startAutoScroll();
+    });
+    
+    nextBtn.addEventListener('click', () => {
+        nextSlide();
+        stopAutoScroll();
+        startAutoScroll();
+    });
+    
+    // Dot navigation
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentIndex = index;
+            updateCarousel();
+            updateDots();
+            stopAutoScroll();
+            startAutoScroll();
+        });
+    });
+    
+    // Pause auto-scroll on hover
+    track.addEventListener('mouseenter', stopAutoScroll);
+    track.addEventListener('mouseleave', startAutoScroll);
+    
+    // Handle window resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            const newSlidesToShow = getSlidesToShow();
+            if (newSlidesToShow !== slidesToShow) {
+                location.reload(); // Simple solution: reload on resize
+            }
+        }, 250);
+    });
+    
+    // Start auto-scroll
+    startAutoScroll();
+    
+    // Touch events for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    track.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopAutoScroll();
+    }, { passive: true });
+    
+    track.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        if (touchEndX < touchStartX) {
+            nextSlide();
+        } else if (touchEndX > touchStartX) {
+            prevSlide();
+        }
+        startAutoScroll();
+    }, { passive: true });
+}
+
+
+
+        // Theme Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            
+            // Check for saved theme
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            body.setAttribute('data-theme', savedTheme);
+            
+            if (themeToggle) {
+                const icon = themeToggle.querySelector('i');
+                if (icon) {
+                    icon.className = savedTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+                }
+                
+                themeToggle.addEventListener('click', function() {
+                    const currentTheme = body.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    
+                    body.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        icon.className = newTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+                    }
+                });
+            }
+            
+            // Mobile menu
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', function() {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+                
+                // Close menu when clicking a link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        hamburger.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    });
+                });
+            }
+        });
+    
+        // Add this to your script.js or inside <script> tags
+window.addEventListener('scroll', function() {
+    const navbar = document.querySelector('.navbar');
+    if (window.scrollY > 100) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+});

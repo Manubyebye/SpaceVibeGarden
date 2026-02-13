@@ -3040,3 +3040,206 @@ img.author-avatar {
 .footer .social-icons a i.fas {
     display: inline-block;
 }
+
+
+
+
+
+
+/* ABSOLUTELY MASSIVE LOGO STYLES - DOMINANT AND CLEAR */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.logo-img {
+    height: 120px !important;  /* ABSOLUTELY MASSIVE logo */
+    width: auto;
+    max-width: 350px;
+    object-fit: contain;
+    display: block;
+}
+
+.logo-text {
+    font-size: 1rem !important;  /* HUGE text */
+    font-weight: 900;
+    color: var(--text-primary);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Make navbar much taller to fit massive logo */
+.navbar {
+    padding: 15px 0;
+    min-height: 150px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.nav-container {
+    padding: 20px 30px;
+}
+
+/* FIX: Add proper padding to push content below the massive navbar */
+.forum-hero-section {
+    margin-top: 180px !important;  /* Pushes the hero section below the navbar */
+    height: 50vh;
+    min-height: 400px;
+    position: relative;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a3a1a 100%);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+}
+
+/* Also add padding to the main section to be safe */
+.section {
+    padding-top: 20px;
+}
+
+/* For logged-in user section */
+.logged-in-user {
+    margin-top: 20px;
+}
+
+/* FOOTER MASSIVE LOGO - MATCHING THE DESIGN */
+.footer-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.footer-logo-img {
+    height: 150px !important;  /* EXTREMELY MASSIVE footer logo */
+    width: auto;
+    max-width: 400px;
+    object-fit: contain;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.footer-logo p {
+    font-size: 1.3rem;
+    margin-top: 10px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* COMPACT STATS - EXACTLY LIKE YOUR IMAGE */
+.stats-compact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.stat-compact {
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    padding: 12px 5px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-compact .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4CAF50;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.stat-compact .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+/* Hide old stats */
+.stats-grid, .stats-grid-fixed {
+    display: none;
+}
+
+/* Make sidebar section padding smaller */
+.sidebar-section {
+    padding: 15px;
+}
+
+.sidebar-section h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+}
+
+.sidebar-section h3 i {
+    font-size: 0.9rem;
+}
+
+/* Rules list compact */
+.rules li {
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+}
+
+.rules li i {
+    font-size: 0.8rem;
+}
+
+/* Footer links grid */
+.footer .links-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+    margin-top: 10px;
+}
+
+.footer .social-links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+    margin: 15px 0;
+}
+
+.footer-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.footer-link:hover {
+    color: #4CAF50;
+}
+
+/* Responsive for mobile */
+@media (max-width: 768px) {
+    .logo-img {
+        height: 90px !important;
+    }
+    
+    .logo-text {
+        font-size: 2.2rem !important;
+    }
+    
+    .footer-logo-img {
+        height: 120px !important;
+    }
+    
+    /* Adjust mobile padding */
+    .forum-hero-section {
+        margin-top: 140px !important;
+    }
+}

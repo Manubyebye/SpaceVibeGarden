@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
+    <link rel="icon" type="image/x-icon" href="img/cosmigrow2.png">
     <link rel="stylesheet" href="forum-styles.css">
 </head>
 <body data-theme="dark">
@@ -26,25 +26,16 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <span class="logo-icon">🌿</span>
-                <span class="logo-text">Space Vibe Garden</span>
+                <!-- YOUR PNG LOGO HERE - BIG AND BOLD -->
+                <img src="img/cosmigrow2.png" alt="Cosmic Grow Logo" class="logo-img">
+                <span class="logo-text">Cosmic Grow</span>
             </div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">Home</a></li>
                 <li><a href="gallery.html" class="nav-link">Gallery</a></li>
                 <li><a href="forum.html" class="nav-link active">Forum</a></li>
                 <li><a href="#yield-calculator" class="nav-link" id="calculator-nav">Yield Calc</a></li>
-                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
             </ul>
-            <div class="nav-actions">
-                <button id="theme-toggle" class="theme-toggle" title="Toggle Dark/Light Mode">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <button id="messages-toggle" class="messages-toggle" title="Private Messages">
-                    <i class="fas fa-envelope"></i>
-                    <span id="unread-badge" class="unread-badge" style="display: none;">0</span>
-                </button>
-            </div>
             <div class="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -492,22 +483,22 @@
                     
                     <div class="sidebar-section">
                         <h3><i class="fas fa-chart-line"></i> Forum Stats</h3>
-                        <div class="stats-grid">
-                            <div class="stat-item">
-                                <span class="stat-number" id="total-posts">0</span>
-                                <span class="stat-label">Posts</span>
+                        <div class="stats-compact">
+                            <div class="stat-compact">
+                                <span class="stat-number" id="total-posts">1</span>
+                                <span class="stat-label">POSTS</span>
                             </div>
-                            <div class="stat-item">
-                                <span class="stat-number" id="total-users">0</span>
-                                <span class="stat-label">Users</span>
+                            <div class="stat-compact">
+                                <span class="stat-number" id="total-users">1</span>
+                                <span class="stat-label">USERS</span>
                             </div>
-                            <div class="stat-item">
+                            <div class="stat-compact">
                                 <span class="stat-number" id="total-comments">0</span>
-                                <span class="stat-label">Comments</span>
+                                <span class="stat-label">COMMENTS</span>
                             </div>
-                            <div class="stat-item">
+                            <div class="stat-compact">
                                 <span class="stat-number" id="total-messages">0</span>
-                                <span class="stat-label">Messages</span>
+                                <span class="stat-label">MESSAGES</span>
                             </div>
                         </div>
                     </div>
@@ -580,39 +571,54 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <span class="logo-icon">🌿 Space Vibe Garden</span>
-                    <p>Professional Cannabis Cultivation</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="forum.html">Forum</a></li>
-                        <li><a href="gallery.html">Gallery</a></li>
-                        <li><a href="#yield-calculator" id="footer-calculator">Yield Calculator</a></li>
-                    </ul>
-                </div>
-                <div class="footer-social">
-                    <h4>Follow Our Journey</h4>
-                    <div class="social-icons">
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#" aria-label="YouTube"><i class="fab fa-telegram"></i></a>
+   <!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="img/cosmigrow2.png"  alt="Cosmic Grow Logo" class="footer-logo-img">
+            </div>
+            
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <div class="links-grid-columns">
+                    <!-- Column 1 -->
+                    <div class="link-column">
+                        <a href="index.html" class="footer-link">Home</a>
+                        <a href="https://hiseed.cz" target="_blank" rel="noopener noreferrer" class="footer-link">Hiseeds</a>
+                    </div>
+                    
+                    <!-- Column 2 -->
+                    <div class="link-column">
+                        <a href="forum.html" class="footer-link">Forum</a>
+                        <a href="https://higarden.cz" target="_blank" rel="noopener noreferrer" class="footer-link">HiGarden</a>
+                    </div>
+                    
+                    <!-- Column 3 -->
+                    <div class="link-column">
+                        <a href="gallery.html" class="footer-link">Gallery</a>
+                        <a href="#contact" class="footer-link">Contact</a>
                     </div>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Space Vibe Garden. All rights reserved. | Legal cultivation in the Czech Republic</p>
-                <p class="disclaimer">This website and forum are for educational purposes only. All cultivation is done in compliance with Czech law.</p>
+            
+            <div class="footer-social">
+                <h4>Follow Our Journey</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                </div>
             </div>
         </div>
-    </footer>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 Space Vibe Garden. All rights reserved. | Legal cultivation in the Czech Republic</p>
+            <p class="disclaimer">This website is for educational purposes only. All cultivation is done in compliance with Czech law.</p>
+        </div>
+    </div>
+</footer>
 
     <!-- JavaScript Files -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
@@ -620,5 +626,7 @@
     <script src="supabase-config.js"></script>
     <script src="script.js"></script>
     <script src="forum-script-final.js?v=1"></script>
+    
+  
 </body>
 </html>
