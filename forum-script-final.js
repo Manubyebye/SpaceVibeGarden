@@ -739,19 +739,28 @@ window.renderImagePreviews = function() {
     });
 };
 
+// ============================================ //
+// IMAGE GALLERY - FIXED VERSION               //
+// ============================================ //
+
 window.createImageGallery = function(images) {
     if (!images || images.length === 0) return '';
     
-    let html = '<div class="post-images">';
-    images.forEach((image, index) => {
+    // SHOW ONLY FIRST 4 IMAGES ON MAIN PAGE - NO "+" BOX
+    const displayImages = images.slice(0, 4);
+    
+    let html = '<div class="post-images" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px 0;">';
+    
+    displayImages.forEach(image => {
         html += `
-            <div class="post-image" onclick="window.openLightbox('${image}')">
-                <img src="${image}" alt="Post image ${index + 1}" loading="lazy">
+            <div class="post-image" onclick="event.stopPropagation(); window.openLightbox('${image}')" 
+                 style="aspect-ratio: 1; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease;">
+                <img src="${image}" alt="Post image" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
         `;
     });
-    html += '</div>';
     
+    html += '</div>';
     return html;
 };
 
@@ -914,6 +923,7 @@ window.handleCreatePost = async function() {
 // ============================================ //
 
 window.viewPostDetails = async function(postId) {
+    window.currentPostId = postId; // Store for the more-images click
     const post = window.forumPosts.find(p => p.id === postId);
     if (!post) {
         window.showErrorMessage('Post not found');
@@ -1027,14 +1037,15 @@ window.showPostDetailModal = function(post, user, badge, comments, categoryNames
         commentsHTML = '<div style="text-align: center; padding: 40px 20px; color: var(--text-muted); background: var(--bg-tertiary); border-radius: 12px;"><i class="fas fa-comment-slash" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i><p>No comments yet. Be the first to comment!</p></div>';
     }
     
+    // SHOW ALL IMAGES IN DETAIL VIEW
     let imagesHTML = '';
     if (post.images && post.images.length > 0) {
-        imagesHTML = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 20px 0;">';
-        post.images.slice(0, 4).forEach((img, i) => {
+        imagesHTML = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">';
+        post.images.forEach(img => {
             imagesHTML += `
-                <div onclick="window.openLightbox('${img}')" style="border-radius: 8px; overflow: hidden; cursor: pointer; aspect-ratio: 1; position: relative;">
+                <div onclick="window.openLightbox('${img}')" 
+                     style="border-radius: 8px; overflow: hidden; cursor: pointer; aspect-ratio: 1; border: 2px solid #4CAF50; transition: transform 0.2s ease;">
                     <img src="${img}" style="width: 100%; height: 100%; object-fit: cover;" alt="Post image">
-                    ${i === 3 && post.images.length > 4 ? `<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold;">+${post.images.length - 4}</div>` : ''}
                 </div>
             `;
         });

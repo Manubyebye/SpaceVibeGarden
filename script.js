@@ -16,10 +16,12 @@ let currentSlide = 0;
 let slideInterval;
 
 // Mobile Navigation Toggle
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-});
+if (hamburger) {
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+}
 
 // Close mobile menu when clicking on a link
 navLinks.forEach(link => {
@@ -173,17 +175,17 @@ if (scrollIndicator) {
     });
 }
 
-// Navbar Background on Scroll
+// Navbar Background on Scroll - FIXED: Better gradient effect
 window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');
     if (!navbar) return;
     
     if (window.scrollY > 50) {
-        navbar.style.backgroundColor = 'rgba(10, 10, 10, 0.98)';
-        navbar.style.padding = '15px 0';
+        navbar.classList.add('scrolled');
+        navbar.style.background = 'linear-gradient(to bottom, rgba(0, 0, 0, 0.98), rgba(10, 10, 10, 0.95))';
     } else {
-        navbar.style.backgroundColor = 'rgba(10, 10, 10, 0.95)';
-        navbar.style.padding = '20px 0';
+        navbar.classList.remove('scrolled');
+        navbar.style.background = 'linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(10, 10, 10, 0.9))';
     }
 });
 
@@ -311,6 +313,9 @@ document.addEventListener('DOMContentLoaded', function() {
         initSlideshow();
     }
     
+    // Initialize partners carousel
+    initPartnersCarousel();
+    
     // Add subtle floating animation to strain cards
     const strainCards = document.querySelectorAll('.model-card');
     strainCards.forEach((card, index) => {
@@ -332,82 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href === '#' || href === '#!') return;
-        
-        // Don't prevent default for external links
-        if (href.includes('http') || href.includes('.html')) return;
-        
-        e.preventDefault();
-        
-        const targetElement = document.querySelector(href);
-        if (targetElement) {
-            const navbarHeight = document.querySelector('.navbar').offsetHeight;
-            window.scrollTo({
-                top: targetElement.offsetTop - navbarHeight,
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-// Optional: Add keyboard navigation for slideshow
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowLeft') {
-        prevSlide();
-        resetInterval();
-    } else if (e.key === 'ArrowRight') {
-        nextSlide();
-        resetInterval();
-    }
-});
-
-// Auto-activate gallery tab based on URL parameter
-if (window.location.hash) {
-    const hash = window.location.hash.substring(1);
-    const tabBtn = document.querySelector(`.tab-btn[data-tab="${hash}"]`);
-    if (tabBtn) {
-        setTimeout(() => {
-            tabBtn.click();
-        }, 100);
-    }
-}
-
-// Newsletter form submission
-const subscribeForm = document.getElementById('subscribe-form');
-if (subscribeForm) {
-    subscribeForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const email = this.querySelector('input[type="email"]').value;
-        alert(`Thank you! You've been subscribed with email: ${email}`);
-        this.reset();
-    });
-}
-
-// Load more functionality for blog
-const loadMoreBtn = document.querySelector('.load-more-btn');
-if (loadMoreBtn) {
-    loadMoreBtn.addEventListener('click', function() {
-        // Simulate loading more articles
-        this.textContent = 'Loading...';
-        this.disabled = true;
-        
-        setTimeout(() => {
-            this.textContent = 'No More Articles';
-            this.style.opacity = '0.5';
-            this.style.cursor = 'not-allowed';
-        }, 1500);
-    });
-}
-
 // Partners Carousel
-document.addEventListener('DOMContentLoaded', function() {
-    initPartnersCarousel();
-});
-
 function initPartnersCarousel() {
     const track = document.getElementById('partnersTrack');
     const prevBtn = document.querySelector('.partner-prev');
@@ -557,63 +487,77 @@ function initPartnersCarousel() {
     }, { passive: true });
 }
 
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href === '#' || href === '#!') return;
+        
+        // Don't prevent default for external links
+        if (href.includes('http') || href.includes('.html')) return;
+        
+        e.preventDefault();
+        
+        const targetElement = document.querySelector(href);
+        if (targetElement) {
+            const navbarHeight = document.querySelector('.navbar').offsetHeight;
+            window.scrollTo({
+                top: targetElement.offsetTop - navbarHeight,
+                behavior: 'smooth'
+            });
+        }
+    });
+});
 
-
-        // Theme Toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const themeToggle = document.getElementById('theme-toggle');
-            const body = document.body;
-            
-            // Check for saved theme
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            body.setAttribute('data-theme', savedTheme);
-            
-            if (themeToggle) {
-                const icon = themeToggle.querySelector('i');
-                if (icon) {
-                    icon.className = savedTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
-                }
-                
-                themeToggle.addEventListener('click', function() {
-                    const currentTheme = body.getAttribute('data-theme');
-                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                    
-                    body.setAttribute('data-theme', newTheme);
-                    localStorage.setItem('theme', newTheme);
-                    
-                    const icon = this.querySelector('i');
-                    if (icon) {
-                        icon.className = newTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
-                    }
-                });
-            }
-            
-            // Mobile menu
-            const hamburger = document.querySelector('.hamburger');
-            const navMenu = document.querySelector('.nav-menu');
-            
-            if (hamburger && navMenu) {
-                hamburger.addEventListener('click', function() {
-                    hamburger.classList.toggle('active');
-                    navMenu.classList.toggle('active');
-                });
-                
-                // Close menu when clicking a link
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.addEventListener('click', () => {
-                        hamburger.classList.remove('active');
-                        navMenu.classList.remove('active');
-                    });
-                });
-            }
-        });
-    
-        // Add this to your script.js or inside <script> tags
-window.addEventListener('scroll', function() {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 100) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
+// Optional: Add keyboard navigation for slideshow
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') {
+        if (prevBtn) {
+            prevSlide();
+            resetInterval();
+        }
+    } else if (e.key === 'ArrowRight') {
+        if (nextBtn) {
+            nextSlide();
+            resetInterval();
+        }
     }
 });
+
+// Auto-activate gallery tab based on URL parameter
+if (window.location.hash) {
+    const hash = window.location.hash.substring(1);
+    const tabBtn = document.querySelector(`.tab-btn[data-tab="${hash}"]`);
+    if (tabBtn) {
+        setTimeout(() => {
+            tabBtn.click();
+        }, 100);
+    }
+}
+
+// Newsletter form submission (if exists)
+const subscribeForm = document.getElementById('subscribe-form');
+if (subscribeForm) {
+    subscribeForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = this.querySelector('input[type="email"]').value;
+        alert(`Thank you! You've been subscribed with email: ${email}`);
+        this.reset();
+    });
+}
+
+// Load more functionality for blog (if exists)
+const loadMoreBtn = document.querySelector('.load-more-btn');
+if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', function() {
+        // Simulate loading more articles
+        this.textContent = 'Loading...';
+        this.disabled = true;
+        
+        setTimeout(() => {
+            this.textContent = 'No More Articles';
+            this.style.opacity = '0.5';
+            this.style.cursor = 'not-allowed';
+        }, 1500);
+    });
+}

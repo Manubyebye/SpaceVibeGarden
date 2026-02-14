@@ -5,30 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Full Gallery - Space Vibe Garden</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="gallery-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+    <link rel="icon" type="image/x-icon" href="img/cosmigrow2.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/css/lightgallery-bundle.min.css">
 </head>
 <body>
     <!-- Particle Background -->
     <div id="particles-js"></div>
     
-    <!-- Navigation Bar -->
+    <!-- Navigation Bar - FIXED: Same slim design with big logo as homepage -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <span class="logo-icon">🌱</span>
-                <span class="logo-text">Space Vibe Garden</span>
+                <img src="img/cosmigrow2.png" alt="Cosmic Grow Logo" class="logo-img">
+                <span class="logo-text">Cosmic Grow</span>
             </div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="index.html#about" class="nav-link">About Us</a></li>
-                <li><a href="index.html#strains" class="nav-link">Strains</a></li>
                 <li><a href="gallery.html" class="nav-link active">Gallery</a></li>
-                <li><a href="blog.html" class="nav-link">Blog</a></li>
+                <li><a href="forum.html" class="nav-link">Forum</a></li>
+                <li><a href="#yield-calculator" class="nav-link" id="calculator-nav">Yield Calc</a></li>
                 <li><a href="index.html#contact" class="nav-link">Contact</a></li>
             </ul>
             <div class="hamburger">
@@ -39,7 +39,7 @@
         </div>
     </nav>
 
-    <!-- Gallery Hero Section -->
+    <!-- Gallery Hero Section - FIXED: Proper margin for slim navbar -->
     <section class="gallery-hero-section">
         <div class="gallery-hero-overlay">
             <div class="container">
@@ -279,10 +279,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- More images (total 36 items for demonstration) -->
-                <!-- Additional items would continue here following the same pattern -->
-                
             </div>
 
             <!-- Load More Button -->
@@ -308,22 +304,32 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer - FIXED: Same as homepage with proper spacing -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <span class="logo-icon">🌱 Space Vibe Garden</span>
-                    <p>Professional Cannabis Cultivation</p>
+                    <img src="img/cosmigrow2.png" alt="Cosmic Grow Logo" class="footer-logo-img">
                 </div>
+                
                 <div class="footer-links">
                     <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="blog.html">Blog</a></li>
-                        <li><a href="gallery.html">Gallery</a></li>
-                    </ul>
+                    <div class="links-grid-columns">
+                        <div class="link-column">
+                            <a href="index.html" class="footer-link">Home</a>
+                            <a href="https://hiseed.cz" target="_blank" rel="noopener noreferrer" class="footer-link">Hiseeds</a>
+                        </div>
+                        <div class="link-column">
+                            <a href="forum.html" class="footer-link">Forum</a>
+                            <a href="https://higarden.cz" target="_blank" rel="noopener noreferrer" class="footer-link">HiGarden</a>
+                        </div>
+                        <div class="link-column">
+                            <a href="gallery.html" class="footer-link">Gallery</a>
+                            <a href="#contact" class="footer-link">Contact</a>
+                        </div>
+                    </div>
                 </div>
+                
                 <div class="footer-social">
                     <h4>Follow Our Journey</h4>
                     <div class="social-icons">
@@ -334,8 +340,9 @@
                     </div>
                 </div>
             </div>
+            
             <div class="footer-bottom">
-                <p>&copy; 2024 Space Vibe Garden. All rights reserved. | Legal cultivation in the Czech Republic</p>
+                <p>&copy; 2026 Space Vibe Garden. All rights reserved. | Legal cultivation in the Czech Republic</p>
                 <p class="disclaimer">This website is for educational purposes only. All cultivation is done in compliance with Czech law.</p>
             </div>
         </div>

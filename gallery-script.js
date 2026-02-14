@@ -1,5 +1,8 @@
 // Gallery-specific JavaScript
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize navbar scroll effect
+    initNavbarScroll();
+    
     // Gallery Filtering
     const filterButtons = document.querySelectorAll('.filter-btn');
     const galleryItems = document.querySelectorAll('.gallery-media-item');
@@ -291,3 +294,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Navbar scroll effect function
+function initNavbarScroll() {
+    window.addEventListener('scroll', () => {
+        const navbar = document.querySelector('.navbar');
+        if (!navbar) return;
+        
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+}
