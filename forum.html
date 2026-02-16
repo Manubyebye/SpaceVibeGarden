@@ -34,7 +34,7 @@
                 <li><a href="index.html" class="nav-link">Home</a></li>
                 <li><a href="gallery.html" class="nav-link">Gallery</a></li>
                 <li><a href="forum.html" class="nav-link active">Forum</a></li>
-                <li><a href="#yield-calculator" class="nav-link" id="calculator-nav">Yield Calc</a></li>
+                <li><a href="yield-calculator.html" class="nav-link" id="calculator-nav">Yield Calc</a></li>
             </ul>
             <div class="hamburger">
                 <span class="bar"></span>
@@ -184,100 +184,6 @@
         </div>
     </div>
 
-    <!-- Yield Calculator Modal -->
-    <div id="yield-calculator-modal" class="yield-calculator-modal">
-        <div class="yield-calculator-content">
-            <div class="yield-calculator-header">
-                <h2><i class="fas fa-calculator"></i> Yield Calculator</h2>
-                <button class="yield-calculator-close">&times;</button>
-            </div>
-            <div class="yield-calculator-body">
-                <div class="calculator-grid">
-                    <div class="calculator-inputs">
-                        <h3>Grow Setup</h3>
-                        <div class="form-group">
-                            <label>Tent Size (ft²)</label>
-                            <input type="number" id="tent-size" value="16" min="4" max="100" step="1">
-                        </div>
-                        <div class="form-group">
-                            <label>Light Type</label>
-                            <select id="light-type">
-                                <option value="led">LED</option>
-                                <option value="hps">HPS</option>
-                                <option value="cmh">CMH</option>
-                                <option value="fluorescent">Fluorescent</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Light Wattage</label>
-                            <input type="number" id="light-wattage" value="480" min="100" max="2000" step="10">
-                        </div>
-                        <div class="form-group">
-                            <label>Number of Plants</label>
-                            <input type="number" id="plant-count" value="4" min="1" max="25" step="1">
-                        </div>
-                        <div class="form-group">
-                            <label>Experience Level</label>
-                            <select id="experience-level">
-                                <option value="beginner">Beginner</option>
-                                <option value="intermediate" selected>Intermediate</option>
-                                <option value="expert">Expert</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Growing Medium</label>
-                            <select id="growing-medium">
-                                <option value="soil">Soil</option>
-                                <option value="coco">Coco Coir</option>
-                                <option value="hydro">Hydroponics</option>
-                                <option value="aeroponics">Aeroponics</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="calculator-results">
-                        <h3>Estimated Yield</h3>
-                        <div class="yield-display">
-                            <span id="estimated-yield">0</span>
-                            <span class="yield-unit">grams</span>
-                        </div>
-                        <div class="yield-per-plant">
-                            <span id="yield-per-plant">0</span>
-                            <span class="yield-unit">g/plant</span>
-                        </div>
-                        <div class="yield-per-watt">
-                            <span id="yield-per-watt">0</span>
-                            <span class="yield-unit">g/watt</span>
-                        </div>
-                        <div class="growing-time">
-                            <h4>Estimated Timeline</h4>
-                            <div class="timeline">
-                                <div class="timeline-item">
-                                    <span class="timeline-label">Vegetative:</span>
-                                    <span id="veg-time">4-6</span> weeks
-                                </div>
-                                <div class="timeline-item">
-                                    <span class="timeline-label">Flowering:</span>
-                                    <span id="flower-time">8-10</span> weeks
-                                </div>
-                                <div class="timeline-item">
-                                    <span class="timeline-label">Total:</span>
-                                    <span id="total-time">12-16</span> weeks
-                                </div>
-                            </div>
-                        </div>
-                        <div class="calculator-actions">
-                            <button id="calculate-yield-btn" class="btn-primary">Calculate</button>
-                            <button id="save-calculator-results" class="btn-secondary">Save Results</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="saved-calculations">
-                    <h4>Your Saved Calculations</h4>
-                    <div id="saved-calculations-list" class="saved-calculations-list"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Forum Hero Section - FIXED: Proper margin for slim navbar -->
     <section class="forum-hero-section">
@@ -605,10 +511,10 @@
                 <div class="footer-social">
                     <h4>Follow Our Journey</h4>
                     <div class="social-icons">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="https://www.instagram.com/cosmic_grow/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61587952298967"><i class="fab fa-facebook"></i></a>
+                        <a href="https://wa.me/420739237198"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://t.me/+8Y-0z2lLxWdkZGQ0"><i class="fab fa-telegram"></i></a>
                     </div>
                 </div>
             </div>

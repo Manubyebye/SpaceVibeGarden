@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Grow - Advanced Yield Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="calculator-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="img/cosmigrow2.png">
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="img/cosmigrow2.png" alt="Cosmic Grow Logo" class="logo-img">
+                <span class="logo-text">Cosmic Grow</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+                <li><a href="forum.html" class="nav-link">Forum</a></li>
+                <li><a href="yield-calculator.html" class="nav-link active">Yield Calc</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Calculator Hero Section -->
+    <section class="calculator-hero-section">
+        <div class="calculator-hero-overlay">
+            <div class="container">
+                <div class="calculator-hero-content">
+                    <h1 class="calculator-hero-title">Advanced <span class="highlight">Yield</span> Calculator</h1>
+                    <p class="calculator-hero-subtitle">Precision cultivation planning with metric measurements</p>
+                    <div class="hero-stats">
+                        <div class="hero-stat-item">
+                            <i class="fas fa-calculator"></i>
+                            <span>Scientific Formula</span>
+                        </div>
+                        <div class="hero-stat-item">
+                            <i class="fas fa-flask"></i>
+                            <span>Strain Database</span>
+                        </div>
+                        <div class="hero-stat-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Real-time Projections</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Calculator Section -->
+    <section class="section">
+        <div class="container">
+            <div class="calculator-container">
+                <!-- Input Panel -->
+                <div class="calculator-panel input-panel">
+                    <h2 class="panel-title"><i class="fas fa-sliders-h"></i> Grow Parameters</h2>
+                    
+                    <div class="input-group">
+                        <label for="strain-type">
+                            <i class="fas fa-dna"></i>
+                            <span>Strain Type</span>
+                        </label>
+                        <select id="strain-type" class="calculator-select">
+                            <option value="indica">Indica (Bushy, Shorter)</option>
+                            <option value="sativa" selected>Sativa (Tall, Branchy)</option>
+                            <option value="hybrid">Hybrid (Balanced)</option>
+                            <option value="auto">Autoflowering</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="strain-yield">
+                            <i class="fas fa-trophy"></i>
+                            <span>Strain Yield Potential</span>
+                        </label>
+                        <select id="strain-yield" class="calculator-select">
+                            <option value="low">Low Producer (Under 400g/m²)</option>
+                            <option value="medium" selected>Medium Producer (400-600g/m²)</option>
+                            <option value="high">High Producer (600-800g/m²)</option>
+                            <option value="elite">Elite Producer (800g+/m²)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="grow-area">
+                            <i class="fas fa-vector-square"></i>
+                            <span>Grow Area (cm²)</span>
+                        </label>
+                        <div class="input-with-suffix">
+                            <input type="number" id="grow-area" class="calculator-input" value="10000" min="2500" max="100000" step="100">
+                            <span class="input-suffix">cm²</span>
+                        </div>
+                        <div class="input-hint">≈ 1m² = 10,000cm²</div>
+                    </div>
+
+                    <div class="input-row">
+                        <div class="input-group half">
+                            <label for="grow-width">
+                                <i class="fas fa-arrows-alt-h"></i>
+                                <span>Width (cm)</span>
+                            </label>
+                            <input type="number" id="grow-width" class="calculator-input" value="100" min="50" max="500" step="5">
+                        </div>
+                        <div class="input-group half">
+                            <label for="grow-length">
+                                <i class="fas fa-arrows-alt-v"></i>
+                                <span>Length (cm)</span>
+                            </label>
+                            <input type="number" id="grow-length" class="calculator-input" value="100" min="50" max="500" step="5">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="plant-count">
+                            <i class="fas fa-seedling"></i>
+                            <span>Number of Plants</span>
+                        </label>
+                        <input type="number" id="plant-count" class="calculator-input" value="4" min="1" max="25" step="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="light-type">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Light Type</span>
+                        </label>
+                        <select id="light-type" class="calculator-select">
+                            <option value="led" selected>LED (High Efficiency)</option>
+                            <option value="cmh">CMH/LEC (Medium Efficiency)</option>
+                            <option value="hps">HPS (Standard Efficiency)</option>
+                            <option value="fluorescent">Fluorescent (Low Efficiency)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="light-wattage">
+                            <i class="fas fa-bolt"></i>
+                            <span>Total Light Wattage (W)</span>
+                        </label>
+                        <input type="number" id="light-wattage" class="calculator-input" value="480" min="100" max="2000" step="10">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="grow-medium">
+                            <i class="fas fa-leaf"></i>
+                            <span>Growing Medium</span>
+                        </label>
+                        <select id="grow-medium" class="calculator-select">
+                            <option value="soil">Soil (Organic)</option>
+                            <option value="coco" selected>Coco Coir</option>
+                            <option value="hydro">Hydroponics</option>
+                            <option value="aeroponics">Aeroponics</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="experience-level">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Experience Level</span>
+                        </label>
+                        <select id="experience-level" class="calculator-select">
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate" selected>Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                            <option value="expert">Expert</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="veg-weeks">
+                            <i class="fas fa-clock"></i>
+                            <span>Vegetative Weeks</span>
+                        </label>
+                        <input type="number" id="veg-weeks" class="calculator-input" value="4" min="2" max="10" step="1">
+                    </div>
+
+                    <button id="calculate-btn" class="btn-primary calculate-btn">
+                        <i class="fas fa-calculator"></i> Calculate Yield
+                    </button>
+                </div>
+
+                <!-- Results Panel -->
+                <div class="calculator-panel results-panel">
+                    <h2 class="panel-title"><i class="fas fa-chart-pie"></i> Yield Projections</h2>
+                    
+                    <div class="results-grid">
+                        <div class="result-card total-yield">
+                            <div class="result-icon">
+                                <i class="fas fa-cannabis"></i>
+                            </div>
+                            <div class="result-content">
+                                <span class="result-label">Estimated Total Yield</span>
+                                <div class="result-value" id="total-yield">0</div>
+                                <span class="result-unit">grams</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card">
+                            <div class="result-icon">
+                                <i class="fas fa-weight"></i>
+                            </div>
+                            <div class="result-content">
+                                <span class="result-label">Per Plant</span>
+                                <div class="result-value" id="yield-per-plant">0</div>
+                                <span class="result-unit">g/plant</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card">
+                            <div class="result-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="result-content">
+                                <span class="result-label">Per Watt</span>
+                                <div class="result-value" id="yield-per-watt">0</div>
+                                <span class="result-unit">g/watt</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card">
+                            <div class="result-icon">
+                                <i class="fas fa-vector-square"></i>
+                            </div>
+                            <div class="result-content">
+                                <span class="result-label">Per m²</span>
+                                <div class="result-value" id="yield-per-meter">0</div>
+                                <span class="result-unit">g/m²</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-container">
+                        <h3><i class="fas fa-calendar-alt"></i> Growth Timeline</h3>
+                        <div class="timeline-bars">
+                            <div class="timeline-item">
+                                <span class="timeline-label">Germination</span>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" style="width: 10%"></div>
+                                    <span class="progress-days">7-10 days</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-label">Vegetative</span>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar veg-bar" id="veg-bar" style="width: 30%"></div>
+                                    <span class="progress-days" id="veg-days">28 days</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-label">Flowering</span>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar flower-bar" id="flower-bar" style="width: 50%"></div>
+                                    <span class="progress-days" id="flower-days">56 days</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-label">Drying/Curing</span>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar cure-bar" style="width: 10%"></div>
+                                    <span class="progress-days">14 days</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="total-time">
+                            <i class="fas fa-hourglass-half"></i>
+                            <span>Total: <strong id="total-days">105</strong> days from seed to harvest</span>
+                        </div>
+                    </div>
+
+                    <div class="environmental-factors">
+                        <h3><i class="fas fa-cloud-sun"></i> Environmental Factors</h3>
+                        <div class="factor-grid">
+                            <div class="factor-item">
+                                <i class="fas fa-temperature-high"></i>
+                                <span>Temperature</span>
+                                <div class="factor-value optimal">24-28°C</div>
+                            </div>
+                            <div class="factor-item">
+                                <i class="fas fa-tint"></i>
+                                <span>Humidity</span>
+                                <div class="factor-value" id="humidity-range">50-60%</div>
+                            </div>
+                            <div class="factor-item">
+                                <i class="fas fa-wind"></i>
+                                <span>Air Exchange</span>
+                                <div class="factor-value">1-2x/min</div>
+                            </div>
+                            <div class="factor-item">
+                                <i class="fas fa-co2"></i>
+                                <span>CO₂</span>
+                                <div class="factor-value">800-1200ppm</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recommendations">
+                        <h3><i class="fas fa-lightbulb"></i> Recommendations</h3>
+                        <ul id="recommendations-list">
+                            <li><i class="fas fa-check-circle"></i> Maintain 24-28°C temperature</li>
+                            <li><i class="fas fa-check-circle"></i> Keep humidity at 50-60% during veg</li>
+                            <li><i class="fas fa-check-circle"></i> Ensure proper air circulation</li>
+                            <li><i class="fas fa-check-circle"></i> Monitor nutrient levels weekly</li>
+                        </ul>
+                    </div>
+
+                    <div class="calculator-actions">
+                        <button id="save-calculation" class="btn-secondary">
+                            <i class="fas fa-save"></i> Save Calculation
+                        </button>
+                        <button id="print-calculation" class="btn-secondary">
+                            <i class="fas fa-print"></i> Print Results
+                        </button>
+                        <button id="share-calculation" class="btn-secondary">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saved Calculations Section -->
+            <div class="saved-calculations-section">
+                <h2 class="section-title">Your Saved Calculations</h2>
+                <div id="saved-calculations" class="saved-calculations-grid">
+                    <!-- Saved calculations will appear here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="img/cosmigrow2.png" alt="Cosmic Grow Logo" class="footer-logo-img">
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <div class="links-grid-columns">
+                        <div class="link-column">
+                            <a href="index.html" class="footer-link">Home</a>
+                            <a href="https://hiseed.cz" target="_blank" rel="noopener noreferrer" class="footer-link">Hiseeds</a>
+                        </div>
+                        <div class="link-column">
+                            <a href="forum.html" class="footer-link">Forum</a>
+                            <a href="https://higarden.cz" target="_blank" rel="noopener noreferrer" class="footer-link">HiGarden</a>
+                        </div>
+                        <div class="link-column">
+                            <a href="gallery.html" class="footer-link">Gallery</a>
+                            <a href="yield-calculator.html" class="footer-link">Yield Calc</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-social">
+                    <h4>Follow Our Journey</h4>
+                    <div class="social-icons">
+                        <a href="https://www.instagram.com/cosmic_grow/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61587952298967"><i class="fab fa-facebook"></i></a>
+                        <a href="https://wa.me/420739237198"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://t.me/+8Y-0z2lLxWdkZGQ0"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Cosmic Grow. All rights reserved. | Legal cultivation in the Czech Republic</p>
+                <p class="disclaimer">This website is for educational purposes only. All cultivation is done in compliance with Czech law.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
+    <script src="calculator-script.js"></script>
+</body>
+</html>
