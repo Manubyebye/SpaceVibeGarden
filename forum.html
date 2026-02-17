@@ -22,11 +22,10 @@
     <!-- Leaf Animation Container -->
     <div id="leaf-container" class="leaf-container"></div>
     
-    <!-- Navigation Bar - FIXED: Same slim design with big logo as homepage -->
+    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <!-- YOUR PNG LOGO HERE - BIG AND BOLD but navbar slim -->
                 <img src="img/cosmigrow2.png" alt="Cosmic Grow Logo" class="logo-img">
                 <span class="logo-text">Cosmic Grow</span>
             </div>
@@ -52,12 +51,17 @@
                 <button class="auth-close">&times;</button>
             </div>
             <div class="auth-modal-body">
+                <!-- Login Form - WITH FORGOT PASSWORD LINK ADDED -->
                 <div id="login-form" class="auth-form active">
                     <div class="form-group">
                         <input type="email" id="login-email" placeholder="Email address" required>
                     </div>
                     <div class="form-group">
                         <input type="password" id="login-password" placeholder="Password" required>
+                    </div>
+                    <!-- FORGOT PASSWORD LINK ADDED HERE -->
+                    <div class="form-group text-right">
+                        <a href="#" id="forgot-password-link" class="forgot-password">Forgot password?</a>
                     </div>
                     <div class="form-group remember">
                         <input type="checkbox" id="remember-me">
@@ -107,7 +111,39 @@
         </div>
     </div>
 
-    <!-- Messages Modal (Private Messaging) -->
+    <!-- PASSWORD RESET MODAL - ADDED HERE -->
+    <div id="reset-password-modal" class="auth-modal">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h2>Reset Password</h2>
+                <button class="reset-password-close auth-close">&times;</button>
+            </div>
+            <div class="auth-modal-body">
+                <div id="reset-form" class="auth-form active">
+                    <p class="reset-instruction">Enter your email address and we'll send you a link to reset your password.</p>
+                    <div class="form-group">
+                        <input type="email" id="reset-email" placeholder="Your email address" required>
+                    </div>
+                    <button id="send-reset-link" class="btn-primary btn-full">Send Reset Link</button>
+                    <div class="auth-divider">
+                        <span>or</span>
+                    </div>
+                    <button id="back-to-login" class="btn-secondary btn-full">Back to Login</button>
+                </div>
+                
+                <div id="reset-success" class="auth-success" style="display: none;">
+                    <div class="success-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Check Your Email</h3>
+                    <p>We've sent a password reset link to your email address.</p>
+                    <button id="reset-continue" class="btn-primary btn-full">Return to Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages Modal -->
     <div id="messages-modal" class="messages-modal">
         <div class="messages-modal-content">
             <div class="messages-modal-header">
@@ -184,8 +220,7 @@
         </div>
     </div>
 
-
-    <!-- Forum Hero Section - FIXED: Proper margin for slim navbar -->
+    <!-- Forum Hero Section -->
     <section class="forum-hero-section">
         <div class="forum-hero-overlay">
             <div class="container">
@@ -477,7 +512,7 @@
         </div>
     </div>
 
-    <!-- Footer - FIXED: Same as homepage with proper spacing -->
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">

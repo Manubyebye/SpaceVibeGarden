@@ -3108,3 +3108,124 @@ img.author-avatar {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* Password Reset Styles */
+.forgot-password {
+    color: #4CAF50;
+    font-size: 0.85rem;
+    text-decoration: none;
+    float: right;
+    margin-top: -10px;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #45a049;
+    text-decoration: underline;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.reset-instruction {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+#reset-password-modal .auth-modal-content {
+    max-width: 400px;
+}
+
+#reset-success h3 {
+    color: var(--text-primary);
+    margin: 15px 0 10px;
+}
+
+#reset-success p {
+    color: var(--text-muted);
+    margin-bottom: 25px;
+}
+
+/* ============================================ */
+/* SIMPLE EMOJI PICKER STYLES                   */
+/* ============================================ */
+
+.emoji-btn {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-right: 10px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.emoji-btn:hover {
+    background: var(--hover-bg);
+    border-color: #4CAF50;
+    transform: scale(1.1);
+}
+
+.emoji-picker-simple {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    background: var(--bg-secondary);
+    border: 1px solid #4CAF50;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 10000;
+    width: 320px;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+}
+
+.emoji-picker-simple.active {
+    display: block;
+}
+
+.emoji-grid-simple {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 8px;
+}
+
+.emoji-grid-simple span {
+    font-size: 1.5rem;
+    cursor: pointer;
+    text-align: center;
+    padding: 5px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.emoji-grid-simple span:hover {
+    background: var(--hover-bg);
+    transform: scale(1.2);
+}
+
+.input-emoji-container {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+}
+
+.input-emoji-container textarea,
+.input-emoji-container input {
+    flex: 1;
+}

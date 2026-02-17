@@ -1087,8 +1087,10 @@ window.showPostDetailModal = function(post, user, badge, comments, categoryNames
                 
                 ${window.currentUser ? `
                 <div style="background: var(--bg-tertiary); border-radius: 12px; padding: 20px;">
-                    <textarea id="comment-input-${post.id}" placeholder="Write a comment..." rows="3" style="width: 100%; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.95rem; margin-bottom: 12px; resize: vertical;"></textarea>
-                    <button onclick="window.addComment('${post.id}')" style="background: #4CAF50; color: white; border: none; padding: 10px 24px; border-radius: 25px; font-size: 0.95rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                    <div class="input-with-emoji">
+                        <textarea id="comment-input-${post.id}" placeholder="Write a comment..." rows="3" style="width: 100%; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.95rem; resize: vertical;"></textarea>
+                    </div>
+                    <button onclick="window.addComment('${post.id}')" style="background: #4CAF50; color: white; border: none; padding: 10px 24px; border-radius: 25px; font-size: 0.95rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 10px;">
                         <i class="fas fa-paper-plane"></i> Post Comment
                     </button>
                 </div>
@@ -1122,6 +1124,14 @@ window.showPostDetailModal = function(post, user, badge, comments, categoryNames
     
     document.body.appendChild(modal);
     document.body.style.overflow = 'hidden';
+    
+    // Add emoji button to comment input after modal is created
+    setTimeout(() => {
+        const commentInput = document.getElementById(`comment-input-${post.id}`);
+        if (commentInput) {
+            addEmojiButtonToInput(`comment-input-${post.id}`, 'input-with-emoji');
+        }
+    }, 500);
 };
 
 // ============================================ //
@@ -2194,7 +2204,7 @@ window.initializeForum = async function() {
     await window.loadUsersFromSupabase();
     await window.checkUser();
     await window.loadPostsFromSupabase();
-    await window.updateForumStats(); // ← STATS LOAD HERE!
+    await window.updateForumStats();
     window.filterPosts();
     window.loadSavedCalculations();
     
@@ -2210,20 +2220,12 @@ window.initializeForum = async function() {
         window.calculateYield();
     });
     
-    document.getElementById('footer-calculator')?.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('yield-calculator-modal')?.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        window.calculateYield();
-    });
-    
     document.querySelector('.yield-calculator-close')?.addEventListener('click', function() {
         document.getElementById('yield-calculator-modal')?.classList.remove('active');
         document.body.style.overflow = 'auto';
     });
     
     // Chat listeners
-    document.getElementById('messages-toggle')?.addEventListener('click', window.openMessagesModal);
     document.getElementById('messages-btn')?.addEventListener('click', window.openMessagesModal);
     document.querySelector('.messages-modal-close')?.addEventListener('click', window.closeMessagesModal);
     
@@ -2328,3 +2330,311 @@ window.initializeForum = async function() {
 // ============================================ //
 
 document.addEventListener('DOMContentLoaded', window.initializeForum);
+
+// ============================================ //
+// PASSWORD RESET FUNCTIONS                       //
+// ============================================ //
+
+// Password reset modal elements
+const resetPasswordModal = document.getElementById('reset-password-modal');
+const forgotPasswordLink = document.getElementById('forgot-password-link');
+const resetClose = document.querySelector('.reset-password-close');
+const backToLogin = document.getElementById('back-to-login');
+const sendResetLink = document.getElementById('send-reset-link');
+const resetForm = document.getElementById('reset-form');
+const resetSuccess = document.getElementById('reset-success');
+const resetContinue = document.getElementById('reset-continue');
+
+// Open reset password modal
+if (forgotPasswordLink) {
+    forgotPasswordLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (resetPasswordModal) {
+            // Hide any open auth modal
+            const authModalElem = document.getElementById('auth-modal');
+            if (authModalElem) authModalElem.classList.remove('active');
+            
+            // Show reset modal
+            resetPasswordModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Reset to form view
+            if (resetForm) resetForm.style.display = 'block';
+            if (resetSuccess) resetSuccess.style.display = 'none';
+            const emailInput = document.getElementById('reset-email');
+            if (emailInput) emailInput.value = '';
+        }
+    });
+}
+
+// Close reset modal
+if (resetClose) {
+    resetClose.addEventListener('click', () => {
+        resetPasswordModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+}
+
+// Back to login from reset modal
+if (backToLogin) {
+    backToLogin.addEventListener('click', () => {
+        resetPasswordModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        // Reopen login modal
+        const authModalElem = document.getElementById('auth-modal');
+        if (authModalElem) {
+            authModalElem.classList.add('active');
+        }
+    });
+}
+
+// Continue from success screen
+if (resetContinue) {
+    resetContinue.addEventListener('click', () => {
+        resetPasswordModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        const authModalElem = document.getElementById('auth-modal');
+        if (authModalElem) {
+            authModalElem.classList.add('active');
+        }
+    });
+}
+
+// Send reset link
+if (sendResetLink) {
+    sendResetLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('reset-email')?.value.trim();
+        
+        if (!email) {
+            window.showErrorMessage('Please enter your email address');
+            return;
+        }
+        
+        // Disable button to prevent multiple clicks
+        sendResetLink.disabled = true;
+        sendResetLink.textContent = 'Sending...';
+        
+        try {
+            const { error } = await window.supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/reset-password.html`,
+            });
+            
+            if (error) throw error;
+            
+            // Show success message
+            if (resetForm) resetForm.style.display = 'none';
+            if (resetSuccess) resetSuccess.style.display = 'block';
+            
+        } catch (error) {
+            console.error('❌ Password reset error:', error);
+            window.showErrorMessage(error.message || 'Failed to send reset link');
+            
+            // Re-enable button
+            sendResetLink.disabled = false;
+            sendResetLink.textContent = 'Send Reset Link';
+        }
+    });
+}
+
+// Close modal on outside click
+if (resetPasswordModal) {
+    resetPasswordModal.addEventListener('click', (e) => {
+        if (e.target === resetPasswordModal) {
+            resetPasswordModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+}
+
+// ============================================ //
+// SIMPLE EMOJI PICKER - GUARANTEED TO WORK    //
+// ============================================ //
+
+// Simple emoji list (popular ones)
+const simpleEmojis = [
+    '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣',
+    '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰',
+    '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜',
+    '🤪', '🤨', '🧐', '🤓', '😎', '🥸', '🤩', '🥳',
+    '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️',
+    '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤',
+    '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱',
+    '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫',
+    '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦',
+    '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵',
+    '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕',
+    '🤑', '🤠', '😈', '👿', '👹', '👺', '🤡', '💩',
+    '👻', '💀', '☠️', '👽', '👾', '🤖', '🎃', '😺',
+    '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾',
+    '👋', '🤚', '🖐', '✋', '🖖', '👌', '🤌', '🤏',
+    '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆',
+    '🖕', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛',
+    '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '✍️',
+    '💅', '🤳', '💪', '🦾', '🦿', '🦵', '🦶', '👂',
+    '🦻', '👃', '🧠', '🫀', '🫁', '🦷', '🦴', '👀',
+    '👁', '👅', '👄', '💋', '🩸'
+];
+
+// Store active pickers
+let activeEmojiPickerSimple = null;
+
+// Function to add emoji picker to any input
+function addSimpleEmojiPicker(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    
+    // Don't add twice
+    if (document.getElementById(`emoji-simple-${inputId}`)) return;
+    
+    console.log(`Adding simple emoji picker to: ${inputId}`);
+    
+    // Create container
+    const container = document.createElement('div');
+    container.className = 'input-emoji-container';
+    container.id = `emoji-container-${inputId}`;
+    
+    // Wrap the input
+    input.parentNode.insertBefore(container, input);
+    container.appendChild(input);
+    
+    // Create emoji button
+    const btn = document.createElement('button');
+    btn.id = `emoji-simple-${inputId}`;
+    btn.className = 'emoji-btn';
+    btn.type = 'button';
+    btn.innerHTML = '😊';
+    btn.title = 'Add emoji';
+    container.appendChild(btn);
+    
+    // Create emoji picker
+    const picker = document.createElement('div');
+    picker.id = `emoji-picker-simple-${inputId}`;
+    picker.className = 'emoji-picker-simple';
+    
+    // Add emojis to picker
+    const grid = document.createElement('div');
+    grid.className = 'emoji-grid-simple';
+    
+    simpleEmojis.forEach(emoji => {
+        const span = document.createElement('span');
+        span.textContent = emoji;
+        span.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Insert emoji at cursor position
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const value = input.value;
+            input.value = value.substring(0, start) + emoji + value.substring(end);
+            
+            // Move cursor
+            input.selectionStart = input.selectionEnd = start + emoji.length;
+            
+            // Trigger input event
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            
+            // Hide picker
+            picker.classList.remove('active');
+            activeEmojiPickerSimple = null;
+        };
+        grid.appendChild(span);
+    });
+    
+    picker.appendChild(grid);
+    container.appendChild(picker);
+    
+    // Toggle picker on button click
+    btn.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Emoji button clicked for:', inputId);
+        
+        // Close any other open picker
+        if (activeEmojiPickerSimple && activeEmojiPickerSimple !== picker) {
+            activeEmojiPickerSimple.classList.remove('active');
+        }
+        
+        // Toggle this picker
+        picker.classList.toggle('active');
+        activeEmojiPickerSimple = picker.classList.contains('active') ? picker : null;
+    };
+    
+    // Close picker when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!container.contains(e.target)) {
+            picker.classList.remove('active');
+            if (activeEmojiPickerSimple === picker) {
+                activeEmojiPickerSimple = null;
+            }
+        }
+    });
+}
+
+// Initialize emoji pickers
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎯 Setting up simple emoji pickers...');
+    
+    // Function to check and add emoji pickers
+    function checkAndAddEmojiPickers() {
+        // Profile bio
+        if (document.getElementById('profile-bio') && !document.getElementById('emoji-container-profile-bio')) {
+            addSimpleEmojiPicker('profile-bio');
+        }
+        
+        // Message input
+        if (document.getElementById('message-input') && !document.getElementById('emoji-container-message-input')) {
+            addSimpleEmojiPicker('message-input');
+        }
+        
+        // New message content
+        if (document.getElementById('new-message-content') && !document.getElementById('emoji-container-new-message-content')) {
+            addSimpleEmojiPicker('new-message-content');
+        }
+        
+        // Post content
+        if (document.getElementById('post-content') && !document.getElementById('emoji-container-post-content')) {
+            addSimpleEmojiPicker('post-content');
+        }
+    }
+    
+    // Check every second for new inputs
+    setInterval(checkAndAddEmojiPickers, 1000);
+});
+
+// Override showPostDetailModal to add emoji to comment inputs
+const originalShowPostDetailModalSimple = window.showPostDetailModal;
+window.showPostDetailModal = function(post, user, badge, comments, categoryNames) {
+    originalShowPostDetailModalSimple(post, user, badge, comments, categoryNames);
+    
+    setTimeout(() => {
+        const commentInput = document.getElementById(`comment-input-${post.id}`);
+        if (commentInput && !document.getElementById(`emoji-container-comment-input-${post.id}`)) {
+            addSimpleEmojiPicker(`comment-input-${post.id}`);
+        }
+    }, 500);
+};
+
+// Override openMessagesModal
+const originalOpenMessagesModalSimple = window.openMessagesModal;
+window.openMessagesModal = function() {
+    originalOpenMessagesModalSimple();
+    setTimeout(() => {
+        if (document.getElementById('message-input') && !document.getElementById('emoji-container-message-input')) {
+            addSimpleEmojiPicker('message-input');
+        }
+    }, 500);
+};
+
+// Override openNewMessageModal
+const originalOpenNewMessageModalSimple = window.openNewMessageModal;
+window.openNewMessageModal = function() {
+    originalOpenNewMessageModalSimple();
+    setTimeout(() => {
+        if (document.getElementById('new-message-content') && !document.getElementById('emoji-container-new-message-content')) {
+            addSimpleEmojiPicker('new-message-content');
+        }
+    }, 300);
+};
