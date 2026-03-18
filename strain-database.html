@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strain Database - Cosmic Grow</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="strain-database-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="img/cosmigrow2.png">
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="img/cosmigrow2.png" alt="Cosmic Grow Logo" class="logo-img">
+                <span class="logo-text">Cosmic Grow</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+                <li><a href="forum.html" class="nav-link">Forum</a></li>
+                <li><a href="grow-journal.html" class="nav-link">Grow Journal</a></li>
+                <li><a href="strain-database.html" class="nav-link active">Strains</a></li>
+                <li><a href="yield-calculator.html" class="nav-link">Yield Calc</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="strain-hero-section">
+        <div class="strain-hero-overlay">
+            <div class="container">
+                <div class="strain-hero-content">
+                    <h1 class="strain-hero-title">Strain <span class="highlight">Database</span></h1>
+                    <p class="strain-hero-subtitle">Explore hundreds of cannabis strains with detailed growing information</p>
+                    
+                    <!-- Quick Stats -->
+                    <div class="strain-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-cannabis"></i>
+                            <span class="stat-number" id="total-strains">500+</span>
+                            <span class="stat-label">Strains</span>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-flask"></i>
+                            <span class="stat-number" id="total-breeders">150+</span>
+                            <span class="stat-label">Breeders</span>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-star"></i>
+                            <span class="stat-number" id="avg-rating">4.7</span>
+                            <span class="stat-label">Avg Rating</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Database Section -->
+    <section class="section">
+        <div class="container">
+            <!-- Search and Filters -->
+            <div class="strain-controls">
+                <div class="strain-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="strain-search" placeholder="Search strains by name, breeder, effects...">
+                </div>
+                
+                <div class="strain-filters">
+                    <select id="filter-type" class="filter-select">
+                        <option value="all">All Types</option>
+                        <option value="indica">Indica</option>
+                        <option value="sativa">Sativa</option>
+                        <option value="hybrid">Hybrid</option>
+                        <option value="ruderalis">Autoflower</option>
+                    </select>
+                    
+                    <select id="filter-difficulty" class="filter-select">
+                        <option value="all">All Difficulties</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="expert">Expert</option>
+                    </select>
+                    
+                    <select id="filter-flavor" class="filter-select">
+                        <option value="all">All Flavors</option>
+                        <option value="sweet">Sweet</option>
+                        <option value="earthy">Earthy</option>
+                        <option value="citrus">Citrus</option>
+                        <option value="pine">Pine</option>
+                        <option value="berry">Berry</option>
+                        <option value="diesel">Diesel</option>
+                    </select>
+                    
+                    <button id="reset-filters" class="btn-secondary">
+                        <i class="fas fa-redo-alt"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Strain Grid -->
+            <div id="strain-grid" class="strain-grid">
+                <!-- Strains will be loaded here -->
+            </div>
+
+            <!-- Load More -->
+            <div class="load-more-container">
+                <button id="load-more-strains" class="btn-secondary">
+                    <i class="fas fa-spinner"></i> Load More Strains
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strain Detail Modal -->
+    <div id="strain-detail-modal" class="strain-modal">
+        <div class="strain-modal-content">
+            <div class="strain-modal-header">
+                <h2 id="detail-strain-name">Strain Name</h2>
+                <button class="strain-modal-close" onclick="closeStrainDetail()">&times;</button>
+            </div>
+            <div class="strain-modal-body" id="strain-detail-body">
+                <!-- Detail content loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="img/cosmigrow2.png" alt="Cosmic Grow Logo" class="footer-logo-img">
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <div class="links-grid-columns">
+                        <div class="link-column">
+                            <a href="index.html" class="footer-link">Home</a>
+                            <a href="https://hiseed.cz" target="_blank" class="footer-link">Hiseeds</a>
+                        </div>
+                        <div class="link-column">
+                            <a href="forum.html" class="footer-link">Forum</a>
+                            <a href="https://higarden.cz" target="_blank" class="footer-link">HiGarden</a>
+                        </div>
+                        <div class="link-column">
+                            <a href="grow-journal.html" class="footer-link">Grow Journal</a>
+                            <a href="strain-database.html" class="footer-link">Strain DB</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-social">
+                    <h4>Follow Our Journey</h4>
+                    <div class="social-icons">
+                        <a href="https://www.instagram.com/cosmic_grow/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61587952298967"><i class="fab fa-facebook"></i></a>
+                        <a href="https://wa.me/420739237198"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://t.me/+8Y-0z2lLxWdkZGQ0"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Cosmic Grow. All rights reserved. | Legal cultivation in the Czech Republic</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
+    <script src="strain-database-script.js"></script>
+    <script src="daily-tips.js"></script>
+    <script src="harvest-timer.js"></script>
+</body>
+</html>

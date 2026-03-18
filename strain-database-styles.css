@@ -1,0 +1,563 @@
+/* ============================================ */
+/* COSMIC GROW - STRAIN DATABASE STYLES         */
+/* ============================================ */
+
+/* Hero Section */
+.strain-hero-section {
+    margin-top: 80px;
+    padding: 60px 0;
+    background: linear-gradient(135deg, #1a0a2a 0%, #2a1a3a 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.strain-hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(156, 39, 176, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 20s infinite;
+}
+
+.strain-hero-content {
+    text-align: center;
+}
+
+.strain-hero-title {
+    font-size: 3.5rem;
+    color: white;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 20px rgba(156, 39, 176, 0.3);
+}
+
+.strain-hero-subtitle {
+    font-size: 1.2rem;
+    color: #ccc;
+    margin-bottom: 40px;
+}
+
+/* Strain Stats */
+.strain-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.strain-stats .stat-card {
+    background: rgba(30, 30, 30, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(156, 39, 176, 0.3);
+    border-radius: 15px;
+    padding: 25px 35px;
+    text-align: center;
+    min-width: 150px;
+    transition: all 0.3s ease;
+}
+
+.strain-stats .stat-card:hover {
+    transform: translateY(-10px);
+    border-color: #9c27b0;
+    box-shadow: 0 15px 30px rgba(156, 39, 176, 0.2);
+}
+
+.strain-stats .stat-card i {
+    font-size: 2.5rem;
+    color: #9c27b0;
+    margin-bottom: 10px;
+}
+
+/* Strain Controls */
+.strain-controls {
+    margin: 40px 0;
+    padding: 30px;
+    background: rgba(30, 30, 30, 0.5);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.strain-search {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.strain-search i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9c27b0;
+}
+
+.strain-search input {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(156, 39, 176, 0.3);
+    border-radius: 30px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.strain-search input:focus {
+    border-color: #9c27b0;
+    outline: none;
+    box-shadow: 0 0 20px rgba(156, 39, 176, 0.2);
+}
+
+.strain-filters {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filter-select {
+    padding: 12px 25px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(156, 39, 176, 0.3);
+    border-radius: 30px;
+    color: white;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.filter-select:hover {
+    border-color: #9c27b0;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #9c27b0;
+}
+
+/* Strain Grid */
+.strain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.strain-card {
+    background: linear-gradient(135deg, rgba(30, 30, 30, 0.9), rgba(20, 20, 20, 0.95));
+    border: 1px solid rgba(156, 39, 176, 0.3);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.strain-card:hover {
+    transform: translateY(-10px);
+    border-color: #9c27b0;
+    box-shadow: 0 20px 40px rgba(156, 39, 176, 0.3);
+}
+
+.strain-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(156, 39, 176, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.strain-card:hover::before {
+    left: 100%;
+}
+
+.strain-image {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.strain-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.strain-card:hover .strain-image img {
+    transform: scale(1.1);
+}
+
+.strain-type-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid;
+}
+
+.strain-type-badge.indica {
+    color: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.strain-type-badge.sativa {
+    color: #ff9800;
+    border-color: #ff9800;
+}
+
+.strain-type-badge.hybrid {
+    color: #9c27b0;
+    border-color: #9c27b0;
+}
+
+.strain-type-badge.ruderalis {
+    color: #2196F3;
+    border-color: #2196F3;
+}
+
+.strain-info {
+    padding: 20px;
+}
+
+.strain-info h3 {
+    color: white;
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+}
+
+.strain-breeder {
+    color: #9c27b0;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.strain-basic-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.strain-stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.strain-stat i {
+    color: #9c27b0;
+    width: 20px;
+}
+
+.strain-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 10px 0;
+}
+
+.strain-rating i {
+    color: #ffc107;
+}
+
+.strain-rating .rating-value {
+    color: white;
+    font-weight: 600;
+}
+
+.strain-rating .rating-count {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.strain-tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.strain-tag {
+    background: rgba(156, 39, 176, 0.1);
+    color: #9c27b0;
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 0.7rem;
+    border: 1px solid rgba(156, 39, 176, 0.3);
+}
+
+/* Strain Modal */
+.strain-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.strain-modal.active {
+    display: flex;
+}
+
+.strain-modal-content {
+    background: linear-gradient(135deg, #1a1a2a, #0a0a1a);
+    border: 2px solid #9c27b0;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.strain-modal-header {
+    padding: 25px 30px;
+    border-bottom: 1px solid rgba(156, 39, 176, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: inherit;
+    z-index: 1;
+}
+
+.strain-modal-header h2 {
+    color: white;
+    font-size: 2rem;
+    margin: 0;
+}
+
+.strain-modal-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.strain-modal-close:hover {
+    color: #f44336;
+}
+
+.strain-modal-body {
+    padding: 30px;
+}
+
+/* Strain Detail Layout */
+.strain-detail-header {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.strain-detail-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 3px solid #9c27b0;
+}
+
+.strain-detail-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.strain-detail-info {
+    flex: 1;
+}
+
+.strain-detail-info h3 {
+    color: white;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+}
+
+.strain-detail-breeder {
+    color: #9c27b0;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.strain-detail-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.detail-stat {
+    background: rgba(156, 39, 176, 0.1);
+    border: 1px solid rgba(156, 39, 176, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+
+.detail-stat .stat-label {
+    display: block;
+    color: #888;
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+}
+
+.detail-stat .stat-value {
+    display: block;
+    color: #9c27b0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.strain-detail-section {
+    margin: 30px 0;
+}
+
+.strain-detail-section h4 {
+    color: white;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.strain-detail-section h4 i {
+    color: #9c27b0;
+}
+
+.strain-detail-section p {
+    color: #ccc;
+    line-height: 1.6;
+}
+
+.flavor-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.flavor-tag {
+    background: rgba(156, 39, 176, 0.1);
+    color: #9c27b0;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    border: 1px solid rgba(156, 39, 176, 0.3);
+}
+
+.effects-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.effect-tag {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.medical-tag {
+    background: rgba(33, 150, 243, 0.1);
+    color: #2196F3;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+.grow-difficulty {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.grow-difficulty.easy {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+    border: 1px solid #4CAF50;
+}
+
+.grow-difficulty.medium {
+    background: rgba(255, 152, 0, 0.1);
+    color: #ff9800;
+    border: 1px solid #ff9800;
+}
+
+.grow-difficulty.expert {
+    background: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+    border: 1px solid #f44336;
+}
+
+/* Load More */
+.load-more-container {
+    text-align: center;
+    margin: 40px 0;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .strain-hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .strain-detail-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .strain-filters {
+        flex-direction: column;
+    }
+    
+    .filter-select {
+        width: 100%;
+    }
+    
+    .strain-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .strain-hero-title {
+        font-size: 2rem;
+    }
+    
+    .strain-stats .stat-card {
+        width: 100%;
+    }
+}

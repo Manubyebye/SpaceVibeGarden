@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grow Journal - Cosmic Grow</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="grow-journal-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="img/cosmigrow2.png">
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="img/cosmigrow2.png" alt="Cosmic Grow Logo" class="logo-img">
+                <span class="logo-text">Cosmic Grow</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+                <li><a href="forum.html" class="nav-link">Forum</a></li>
+                <li><a href="grow-journal.html" class="nav-link active">Grow Journal</a></li>
+                <li><a href="strain-database.html" class="nav-link">Strains</a></li>
+                <li><a href="yield-calculator.html" class="nav-link">Yield Calc</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="journal-hero-section">
+        <div class="journal-hero-overlay">
+            <div class="container">
+                <div class="journal-hero-content">
+                    <h1 class="journal-hero-title">Grow <span class="highlight">Journal</span></h1>
+                    <p class="journal-hero-subtitle">Document your cultivation journey - from seed to harvest</p>
+                    
+                    <!-- Quick Stats -->
+                    <div class="journal-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-seedling"></i>
+                            <span class="stat-number" id="total-grows">0</span>
+                            <span class="stat-label">Total Grows</span>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-leaf"></i>
+                            <span class="stat-number" id="active-grows">0</span>
+                            <span class="stat-label">Active</span>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-cannabis"></i>
+                            <span class="stat-number" id="completed-grows">0</span>
+                            <span class="stat-label">Harvested</span>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-camera"></i>
+                            <span class="stat-number" id="total-photos">0</span>
+                            <span class="stat-label">Photos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Journal Section -->
+    <section class="section">
+        <div class="container">
+            <!-- Journal Controls -->
+            <div class="journal-controls">
+                <button id="start-new-grow" class="btn-primary">
+                    <i class="fas fa-plus"></i> Start New Grow
+                </button>
+                <div class="journal-filters">
+                    <button class="filter-btn active" data-filter="all">All Grows</button>
+                    <button class="filter-btn" data-filter="active">Active</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                    <button class="filter-btn" data-filter="planning">Planning</button>
+                </div>
+                <div class="journal-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search grows..." id="journal-search">
+                </div>
+            </div>
+
+            <!-- Grows Grid -->
+            <div id="grows-container" class="grows-grid">
+                <!-- Grows will be loaded here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-journal" class="empty-journal" style="display: none;">
+                <i class="fas fa-journal-whills"></i>
+                <h3>Your Grow Journal is Empty</h3>
+                <p>Start documenting your first cultivation journey!</p>
+                <button onclick="showNewGrowModal()" class="btn-primary">
+                    <i class="fas fa-plus"></i> Start Your First Grow
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Grow Modal -->
+    <div id="new-grow-modal" class="journal-modal">
+        <div class="journal-modal-content">
+            <div class="journal-modal-header">
+                <h2><i class="fas fa-seedling"></i> Start New Grow</h2>
+                <button class="journal-modal-close" onclick="closeNewGrowModal()">&times;</button>
+            </div>
+            <div class="journal-modal-body">
+                <form id="new-grow-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Strain Name *</label>
+                            <input type="text" id="grow-strain" placeholder="e.g., Apple Fritter" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Breeder</label>
+                            <input type="text" id="grow-breeder" placeholder="e.g., Cosmic Seeds">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Plant Date</label>
+                            <input type="date" id="grow-plant-date">
+                        </div>
+                        <div class="form-group">
+                            <label>Grow Type</label>
+                            <select id="grow-type">
+                                <option value="indoor">Indoor</option>
+                                <option value="outdoor">Outdoor</option>
+                                <option value="greenhouse">Greenhouse</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Medium</label>
+                            <select id="grow-medium">
+                                <option value="soil">Soil</option>
+                                <option value="coco">Coco Coir</option>
+                                <option value="hydro">Hydroponics</option>
+                                <option value="aeroponics">Aeroponics</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Light Type</label>
+                            <select id="grow-light">
+                                <option value="led">LED</option>
+                                <option value="hps">HPS</option>
+                                <option value="cmh">CMH</option>
+                                <option value="fluorescent">Fluorescent</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Expected Harvest</label>
+                            <input type="date" id="grow-harvest-date">
+                        </div>
+                        <div class="form-group">
+                            <label>Difficulty</label>
+                            <select id="grow-difficulty">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Goals / Notes</label>
+                        <textarea id="grow-notes" placeholder="What are your goals for this grow?" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Cover Photo</label>
+                        <div class="cover-photo-upload">
+                            <input type="file" id="grow-cover" accept="image/*" onchange="previewCoverPhoto(event)">
+                            <div id="cover-preview" class="cover-preview"></div>
+                        </div>
+                    </div>
+
+                    <div class="journal-modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closeNewGrowModal()">Cancel</button>
+                        <button type="submit" class="btn-primary">Start Grow</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Entry Modal -->
+    <div id="add-entry-modal" class="journal-modal">
+        <div class="journal-modal-content">
+            <div class="journal-modal-header">
+                <h2><i class="fas fa-pen"></i> Add Journal Entry</h2>
+                <button class="journal-modal-close" onclick="closeEntryModal()">&times;</button>
+            </div>
+            <div class="journal-modal-body">
+                <form id="add-entry-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Day Number *</label>
+                            <input type="number" id="entry-day" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="entry-date">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Temperature (°C)</label>
+                            <input type="number" id="entry-temp" step="0.1" placeholder="24.5">
+                        </div>
+                        <div class="form-group">
+                            <label>Humidity (%)</label>
+                            <input type="number" id="entry-humidity" step="1" placeholder="55">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>pH Level</label>
+                            <input type="number" id="entry-ph" step="0.1" placeholder="6.2">
+                        </div>
+                        <div class="form-group">
+                            <label>EC/PPM</label>
+                            <input type="number" id="entry-ec" placeholder="1.2">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nutrients Used</label>
+                        <input type="text" id="entry-nutrients" placeholder="e.g., Bloom A/B 2ml/L">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Observations *</label>
+                        <textarea id="entry-notes" placeholder="What's happening today? Growth, changes, issues..." rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Photos</label>
+                        <input type="file" id="entry-photos" accept="image/*" multiple onchange="previewEntryPhotos(event)">
+                        <div id="entry-photos-preview" class="photos-preview"></div>
+                    </div>
+
+                    <div class="journal-modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closeEntryModal()">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Entry</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="img/cosmigrow2.png" alt="Cosmic Grow Logo" class="footer-logo-img">
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <div class="links-grid-columns">
+                        <div class="link-column">
+                            <a href="index.html" class="footer-link">Home</a>
+                            <a href="https://hiseed.cz" target="_blank" class="footer-link">Hiseeds</a>
+                        </div>
+                        <div class="link-column">
+                            <a href="forum.html" class="footer-link">Forum</a>
+                            <a href="https://higarden.cz" target="_blank" class="footer-link">HiGarden</a>
+                        </div>
+                        <div class="link-column">
+                            <a href="grow-journal.html" class="footer-link">Grow Journal</a>
+                            <a href="strain-database.html" class="footer-link">Strain DB</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-social">
+                    <h4>Follow Our Journey</h4>
+                    <div class="social-icons">
+                        <a href="https://www.instagram.com/cosmic_grow/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61587952298967"><i class="fab fa-facebook"></i></a>
+                        <a href="https://wa.me/420739237198"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://t.me/+8Y-0z2lLxWdkZGQ0"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Cosmic Grow. All rights reserved. | Legal cultivation in the Czech Republic</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
+    <script src="grow-journal-script.js"></script>
+    <script src="daily-tips.js"></script>
+    <script src="harvest-timer.js"></script>
+</body>
+</html>

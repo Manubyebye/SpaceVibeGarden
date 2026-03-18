@@ -1792,3 +1792,1865 @@ h1, h2, h3, h4 {
         font-size: 1.2rem;
     }
 }
+
+/* ============================================ */
+/* COSMIC GROW - HARVEST COUNTDOWN WIDGET       */
+/* ============================================ */
+
+.cosmic-harvest-widget {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 300px;
+    background: linear-gradient(135deg, #1a1a2a 0%, #0a0a1a 100%);
+    border: 2px solid #4CAF50;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(76, 175, 80, 0.3);
+    z-index: 9998;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    animation: slideInLeft 0.5s ease;
+}
+
+.cosmic-harvest-widget.minimized {
+    width: 200px;
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.harvest-widget-header {
+    background: linear-gradient(45deg, #4CAF50, #2E7D32);
+    color: white;
+    padding: 15px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.harvest-widget-header i:first-child {
+    animation: pulse 2s infinite;
+}
+
+.harvest-widget-content {
+    padding: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.active-harvests {
+    margin-bottom: 15px;
+}
+
+.no-harvests {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+    font-style: italic;
+    border: 1px dashed rgba(76, 175, 80, 0.3);
+    border-radius: 10px;
+}
+
+.harvest-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.harvest-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #4CAF50;
+}
+
+.harvest-item.harvest-ready::before {
+    background: #ff9800;
+    animation: pulse 1s infinite;
+}
+
+.harvest-item.harvest-soon::before {
+    background: #ff9800;
+}
+
+.harvest-item.harvest-month::before {
+    background: #4CAF50;
+}
+
+.harvest-item.harvest-far::before {
+    background: #2196F3;
+}
+
+.harvest-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+}
+
+.harvest-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.harvest-strain {
+    font-weight: 600;
+    color: white;
+    font-size: 1rem;
+}
+
+.remove-harvest {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.remove-harvest:hover {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+    transform: scale(1.1);
+}
+
+.harvest-countdown {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.countdown-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4CAF50;
+    display: block;
+    line-height: 1;
+}
+
+.countdown-label {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.harvest-progress {
+    margin: 10px 0;
+}
+
+.progress-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.harvest-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: #888;
+    margin: 5px 0;
+}
+
+.harvest-details i {
+    color: #4CAF50;
+    margin-right: 3px;
+}
+
+.harvest-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 3px 0;
+    border-radius: 3px;
+}
+
+.harvest-status.harvest-ready {
+    color: #ff9800;
+    animation: pulse 1s infinite;
+}
+
+.harvest-status.harvest-soon {
+    color: #ff9800;
+}
+
+.harvest-status.harvest-month {
+    color: #4CAF50;
+}
+
+.harvest-status.harvest-far {
+    color: #2196F3;
+}
+
+.add-harvest-btn {
+    width: 100%;
+    background: linear-gradient(45deg, #4CAF50, #2E7D32);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.add-harvest-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+/* Harvest Modal */
+.harvest-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.harvest-modal-content {
+    background: linear-gradient(135deg, #1a2a1a 0%, #0a1a0a 100%);
+    border: 2px solid #4CAF50;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.harvest-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.harvest-modal-header h3 {
+    color: white;
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.harvest-modal-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.harvest-modal-close:hover {
+    color: #f44336;
+}
+
+.harvest-modal-body {
+    padding: 25px;
+}
+
+.harvest-modal-body .form-group {
+    margin-bottom: 20px;
+}
+
+.harvest-modal-body label {
+    display: block;
+    color: #ccc;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.harvest-modal-body input,
+.harvest-modal-body select,
+.harvest-modal-body textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.harvest-modal-body input:focus,
+.harvest-modal-body select:focus,
+.harvest-modal-body textarea:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.harvest-modal-body input[type="date"] {
+    color-scheme: dark;
+}
+
+.save-harvest-btn {
+    width: 100%;
+    background: linear-gradient(45deg, #4CAF50, #2E7D32);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.save-harvest-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+}
+
+/* Harvest Notification */
+.harvest-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: linear-gradient(45deg, #4CAF50, #2E7D32);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 10001;
+    transition: transform 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.harvest-notification.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cosmic-harvest-widget {
+        width: 280px;
+        bottom: 10px;
+        left: 10px;
+    }
+    
+    .cosmic-harvest-widget.minimized {
+        width: 150px;
+    }
+}
+
+@media (max-width: 576px) {
+    .cosmic-harvest-widget {
+        width: 250px;
+    }
+}
+
+
+/* ============================================ */
+/* COSMIC GROW - DAILY TIPS WIDGET              */
+/* BEAUTIFUL VISUAL DESIGN - RIGHT SIDE         */
+/* ============================================ */
+
+.cosmic-tips-widget {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 380px;
+    background: linear-gradient(145deg, #1a2a1a, #0f1a0f);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(76, 175, 80, 0.2), 0 0 30px rgba(76, 175, 80, 0.2);
+    z-index: 9999;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: slideInRight 0.6s ease-out;
+}
+
+.cosmic-tips-widget:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 30px 70px rgba(76, 175, 80, 0.4), 0 0 0 2px rgba(76, 175, 80, 0.3);
+}
+
+.cosmic-tips-widget.minimized {
+    width: 220px;
+    height: auto;
+    transform: none;
+}
+
+.cosmic-tips-widget.minimized:hover {
+    transform: translateY(-5px);
+}
+
+.tips-widget-glow {
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 70% 30%, rgba(76, 175, 80, 0.15), transparent 70%);
+    pointer-events: none;
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.tips-widget-header {
+    background: linear-gradient(135deg, #2a3a2a, #1a2a1a);
+    padding: 20px 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+    position: relative;
+    z-index: 2;
+}
+
+.header-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    animation: pulse 2s infinite;
+}
+
+.header-icon i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.header-text {
+    flex: 1;
+}
+
+.header-title {
+    display: block;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.header-subtitle {
+    display: block;
+    color: #aaa;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.header-toggle {
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4CAF50;
+    transition: all 0.3s ease;
+}
+
+.header-toggle:hover {
+    background: rgba(76, 175, 80, 0.2);
+    transform: scale(1.1);
+}
+
+.tips-widget-content {
+    padding: 25px;
+    max-height: 600px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4CAF50 #1a2a1a;
+    transition: all 0.4s ease;
+}
+
+.tips-widget-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tips-widget-content::-webkit-scrollbar-track {
+    background: #1a2a1a;
+    border-radius: 3px;
+}
+
+.tips-widget-content::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    border-radius: 3px;
+}
+
+/* Tip of the Day Card */
+.tip-of-day-card {
+    background: linear-gradient(145deg, rgba(76, 175, 80, 0.1), rgba(46, 125, 50, 0.05));
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.tip-of-day-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(76, 175, 80, 0.1) 0%, transparent 70%);
+    opacity: 0.5;
+    animation: rotate 15s linear infinite;
+}
+
+.tip-of-day-card.tip-refresh {
+    animation: pulse 0.5s ease;
+    background: rgba(76, 175, 80, 0.2);
+}
+
+.tip-of-day-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a2a1a;
+    padding: 5px 15px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+.tip-of-day-content {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    position: relative;
+    z-index: 2;
+}
+
+.tip-of-day-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.tip-of-day-text {
+    flex: 1;
+}
+
+.tip-of-day-category {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.tip-of-day-message {
+    color: white;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Categories */
+.tips-categories {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.category-filter-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    color: #ccc;
+    padding: 8px 15px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.category-filter-btn:hover {
+    background: rgba(76, 175, 80, 0.1);
+    border-color: #4CAF50;
+    transform: translateY(-2px);
+}
+
+.category-filter-btn.active {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    color: white;
+    border-color: white;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.tip-category-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tip-category-btn:hover {
+    transform: translateY(-3px) scale(1.1);
+    border-color: currentColor;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+}
+
+.tip-category-btn span {
+    transition: transform 0.3s ease;
+}
+
+.tip-category-btn:hover span {
+    transform: scale(1.1);
+}
+
+/* Tips List */
+.tips-list-container {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(76, 175, 80, 0.1);
+}
+
+.tips-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.tips-list-header h4 {
+    color: white;
+    font-size: 1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tips-list-header h4 i {
+    color: #4CAF50;
+}
+
+.tips-count {
+    color: #888;
+    font-size: 0.8rem;
+    background: rgba(76, 175, 80, 0.1);
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.tips-list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.tip-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.tip-item:hover {
+    background: rgba(76, 175, 80, 0.05);
+    transform: translateX(5px);
+    border-left-color: #4CAF50;
+}
+
+.tip-item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.tip-item-content {
+    flex: 1;
+}
+
+.tip-item-category {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+    font-weight: 600;
+}
+
+.tip-item-text {
+    color: #ddd;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    display: block;
+}
+
+/* Widget Footer */
+.tips-widget-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.new-tip-btn {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.new-tip-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
+}
+
+.new-tip-btn i {
+    font-size: 0.9rem;
+    animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.tip-counter {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #888;
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
+.tip-counter i {
+    color: #4CAF50;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+/* Animations */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cosmic-tips-widget {
+        width: 320px;
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .cosmic-tips-widget.minimized {
+        width: 180px;
+    }
+    
+    .tip-of-day-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .cosmic-tips-widget {
+        width: 300px;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .tips-categories {
+        gap: 5px;
+    }
+    
+    .category-filter-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .tip-category-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+}
+
+/* ============================================ */
+/* COSMIC GROW - HARVEST TIMER WIDGET           */
+/* LEFT SIDE - FULLY FIXED                      */
+/* ============================================ */
+
+.cosmic-harvest-widget {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 340px;
+    background: linear-gradient(145deg, #1a1a2a, #0f0f1a);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(76, 175, 80, 0.2);
+    z-index: 9998;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: slideInLeft 0.6s ease-out;
+}
+
+.cosmic-harvest-widget:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 30px 70px rgba(76, 175, 80, 0.3);
+}
+
+.cosmic-harvest-widget.minimized {
+    width: 220px;
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.harvest-widget-header {
+    background: linear-gradient(135deg, #2a2a3a, #1a1a2a);
+    padding: 20px 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.harvest-header-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    animation: pulse 2s infinite;
+}
+
+.harvest-header-icon i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.harvest-header-text {
+    flex: 1;
+}
+
+.harvest-header-title {
+    display: block;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 2px;
+}
+
+.harvest-header-subtitle {
+    display: block;
+    color: #aaa;
+    font-size: 0.8rem;
+}
+
+.harvest-header-toggle {
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4CAF50;
+    transition: all 0.3s ease;
+}
+
+.harvest-header-toggle:hover {
+    background: rgba(76, 175, 80, 0.2);
+    transform: scale(1.1);
+}
+
+.harvest-widget-content {
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.active-harvests {
+    margin-bottom: 15px;
+}
+
+.no-harvests {
+    text-align: center;
+    padding: 30px 20px;
+    color: #888;
+    font-style: italic;
+    border: 2px dashed rgba(76, 175, 80, 0.3);
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    line-height: 1.6;
+}
+
+.harvest-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    border-radius: 16px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.harvest-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.harvest-item.harvest-ready::before {
+    background: #ff9800;
+    box-shadow: 0 0 20px #ff9800;
+}
+
+.harvest-item.harvest-soon::before {
+    background: #ff9800;
+}
+
+.harvest-item.harvest-month::before {
+    background: #4CAF50;
+}
+
+.harvest-item.harvest-far::before {
+    background: #2196F3;
+}
+
+.harvest-item:hover {
+    transform: translateX(5px);
+    background: rgba(76, 175, 80, 0.05);
+}
+
+.harvest-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.harvest-strain-info {
+    flex: 1;
+}
+
+.harvest-strain {
+    font-weight: 700;
+    color: white;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.harvest-breeder {
+    color: #4CAF50;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.remove-harvest {
+    background: none;
+    border: none;
+    color: #888;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.remove-harvest:hover {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+    transform: scale(1.1);
+}
+
+.harvest-countdown {
+    text-align: center;
+    margin: 15px 0;
+}
+
+.countdown-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #4CAF50;
+    display: block;
+    line-height: 1;
+}
+
+.countdown-label {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.harvest-progress {
+    margin: 15px 0;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    color: #888;
+    font-size: 0.75rem;
+    margin-bottom: 5px;
+}
+
+.progress-header i {
+    color: #4CAF50;
+    margin-right: 3px;
+}
+
+.progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.harvest-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: #888;
+    margin: 10px 0;
+}
+
+.harvest-details i {
+    color: #4CAF50;
+    margin-right: 3px;
+}
+
+.harvest-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 20px;
+    margin-top: 10px;
+}
+
+.harvest-status.harvest-ready {
+    color: #ff9800;
+    background: rgba(255, 152, 0, 0.1);
+    animation: pulse 1s infinite;
+}
+
+.harvest-status.harvest-soon {
+    color: #ff9800;
+    background: rgba(255, 152, 0, 0.05);
+}
+
+.harvest-status.harvest-month {
+    color: #4CAF50;
+    background: rgba(76, 175, 80, 0.05);
+}
+
+.harvest-status.harvest-far {
+    color: #2196F3;
+    background: rgba(33, 150, 243, 0.05);
+}
+
+.add-harvest-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.add-harvest-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
+}
+
+/* Harvest Modal */
+.harvest-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.harvest-modal-content {
+    background: linear-gradient(135deg, #1a2a1a, #0a1a0a);
+    border: 2px solid #4CAF50;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.harvest-modal-header {
+    padding: 25px 30px;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.harvest-modal-header h3 {
+    color: white;
+    font-size: 1.5rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.harvest-modal-header h3 i {
+    color: #4CAF50;
+}
+
+.harvest-modal-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.harvest-modal-close:hover {
+    color: #f44336;
+}
+
+.harvest-modal-body {
+    padding: 30px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.form-group.half {
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    color: #ccc;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.form-group input[type="date"] {
+    color-scheme: dark;
+}
+
+.save-harvest-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.save-harvest-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
+}
+
+/* Harvest Notification */
+.harvest-notification {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: 10001;
+    transition: transform 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.harvest-notification.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ============================================ */
+/* COSMIC GROW - DAILY TIPS WIDGET              */
+/* RIGHT SIDE - NOW STARTS MINIMIZED            */
+/* ============================================ */
+
+.cosmic-tips-widget {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 380px;
+    background: linear-gradient(145deg, #1a2a1a, #0f1a0f);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(76, 175, 80, 0.2), 0 0 30px rgba(76, 175, 80, 0.2);
+    z-index: 9999;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: slideInRight 0.6s ease-out;
+}
+
+.cosmic-tips-widget:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 30px 70px rgba(76, 175, 80, 0.4), 0 0 0 2px rgba(76, 175, 80, 0.3);
+}
+
+.cosmic-tips-widget.minimized {
+    width: 220px;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.tips-widget-glow {
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 70% 30%, rgba(76, 175, 80, 0.15), transparent 70%);
+    pointer-events: none;
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.tips-widget-header {
+    background: linear-gradient(135deg, #2a3a2a, #1a2a1a);
+    padding: 20px 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+    position: relative;
+    z-index: 2;
+}
+
+.header-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    animation: pulse 2s infinite;
+}
+
+.header-icon i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.header-text {
+    flex: 1;
+}
+
+.header-title {
+    display: block;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.header-subtitle {
+    display: block;
+    color: #aaa;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.header-toggle {
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4CAF50;
+    transition: all 0.3s ease;
+}
+
+.header-toggle:hover {
+    background: rgba(76, 175, 80, 0.2);
+    transform: scale(1.1);
+}
+
+.tips-widget-content {
+    padding: 25px;
+    max-height: 600px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4CAF50 #1a2a1a;
+    transition: all 0.4s ease;
+}
+
+.tips-widget-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tips-widget-content::-webkit-scrollbar-track {
+    background: #1a2a1a;
+    border-radius: 3px;
+}
+
+.tips-widget-content::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    border-radius: 3px;
+}
+
+.tip-of-day-card {
+    background: linear-gradient(145deg, rgba(76, 175, 80, 0.1), rgba(46, 125, 50, 0.05));
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.tip-of-day-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(76, 175, 80, 0.1) 0%, transparent 70%);
+    opacity: 0.5;
+    animation: rotate 15s linear infinite;
+}
+
+.tip-of-day-card.tip-refresh {
+    animation: pulse 0.5s ease;
+    background: rgba(76, 175, 80, 0.2);
+}
+
+.tip-of-day-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a2a1a;
+    padding: 5px 15px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+.tip-of-day-content {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    position: relative;
+    z-index: 2;
+}
+
+.tip-of-day-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.tip-of-day-text {
+    flex: 1;
+}
+
+.tip-of-day-category {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.tip-of-day-message {
+    color: white;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 400;
+}
+
+.tips-categories {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.category-filter-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    color: #ccc;
+    padding: 8px 15px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.category-filter-btn:hover {
+    background: rgba(76, 175, 80, 0.1);
+    border-color: #4CAF50;
+    transform: translateY(-2px);
+}
+
+.category-filter-btn.active {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    color: white;
+    border-color: white;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.tip-category-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tip-category-btn:hover {
+    transform: translateY(-3px) scale(1.1);
+    border-color: currentColor;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+}
+
+.tip-category-btn span {
+    transition: transform 0.3s ease;
+}
+
+.tip-category-btn:hover span {
+    transform: scale(1.1);
+}
+
+.tips-list-container {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(76, 175, 80, 0.1);
+}
+
+.tips-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.tips-list-header h4 {
+    color: white;
+    font-size: 1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tips-list-header h4 i {
+    color: #4CAF50;
+}
+
+.tips-count {
+    color: #888;
+    font-size: 0.8rem;
+    background: rgba(76, 175, 80, 0.1);
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.tips-list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.tip-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.tip-item:hover {
+    background: rgba(76, 175, 80, 0.05);
+    transform: translateX(5px);
+    border-left-color: #4CAF50;
+}
+
+.tip-item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.tip-item-content {
+    flex: 1;
+}
+
+.tip-item-category {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+    font-weight: 600;
+}
+
+.tip-item-text {
+    color: #ddd;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    display: block;
+}
+
+.tips-widget-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.new-tip-btn {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.new-tip-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
+}
+
+.new-tip-btn i {
+    animation: spin 3s linear infinite;
+}
+
+.tip-counter {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #888;
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
+.tip-counter i {
+    color: #4CAF50;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Responsive for both widgets */
+@media (max-width: 768px) {
+    .cosmic-harvest-widget {
+        width: 300px;
+        bottom: 20px;
+        left: 20px;
+    }
+    
+    .cosmic-harvest-widget.minimized {
+        width: 180px;
+    }
+    
+    .cosmic-tips-widget {
+        width: 320px;
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .cosmic-tips-widget.minimized {
+        width: 180px;
+    }
+}
+
+@media (max-width: 576px) {
+    .cosmic-harvest-widget,
+    .cosmic-tips-widget {
+        width: 280px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
