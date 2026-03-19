@@ -3654,3 +3654,482 @@ h1, h2, h3, h4 {
         gap: 0;
     }
 }
+
+/* ============================================ */
+/* COSMIC GROW - ULTRA-COMPACT WIDGETS          */
+/* PERFECT FOR MOBILE - MINIMAL SPACE           */
+/* ============================================ */
+
+/* HARVEST TIMER WIDGET - LEFT SIDE */
+.cosmic-harvest-widget {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 200px;
+    background: rgba(20, 20, 30, 0.95);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+    z-index: 9998;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.cosmic-harvest-widget.minimized {
+    width: 60px;
+    border-radius: 30px;
+}
+
+.cosmic-harvest-widget.minimized .harvest-header-text,
+.cosmic-harvest-widget.minimized .harvest-header-count {
+    display: none;
+}
+
+.harvest-widget-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    cursor: pointer;
+    gap: 8px;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.harvest-header-icon {
+    width: 30px;
+    height: 30px;
+    background: #4CAF50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.harvest-header-icon i {
+    color: white;
+    font-size: 14px;
+}
+
+.harvest-header-text {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+}
+
+.harvest-header-count {
+    background: rgba(255,255,255,0.1);
+    padding: 2px 6px;
+    border-radius: 20px;
+    font-size: 11px;
+    color: #4CAF50;
+    min-width: 20px;
+    text-align: center;
+}
+
+.harvest-header-toggle {
+    color: #4CAF50;
+    font-size: 12px;
+    width: 20px;
+    text-align: center;
+}
+
+.harvest-widget-content {
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.no-harvests {
+    text-align: center;
+    padding: 15px;
+    color: #888;
+    font-size: 12px;
+}
+
+.harvest-item {
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-left: 3px solid transparent;
+}
+
+.harvest-item.harvest-ready { border-left-color: #ff9800; }
+.harvest-item.harvest-soon { border-left-color: #ff9800; }
+.harvest-item.harvest-month { border-left-color: #4CAF50; }
+.harvest-item.harvest-far { border-left-color: #2196F3; }
+
+.harvest-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.harvest-strain {
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+}
+
+.remove-harvest {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 2px 5px;
+}
+
+.harvest-countdown {
+    text-align: center;
+    margin: 5px 0;
+}
+
+.countdown-number {
+    font-size: 18px;
+    font-weight: 700;
+    color: #4CAF50;
+    line-height: 1;
+}
+
+.countdown-label {
+    font-size: 9px;
+    color: #888;
+    margin-left: 3px;
+}
+
+.harvest-progress {
+    margin: 8px 0;
+}
+
+.progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.harvest-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.harvest-status-indicator {
+    font-size: 12px;
+}
+
+.harvest-date {
+    font-size: 9px;
+    color: #666;
+}
+
+.add-harvest-btn {
+    width: 100%;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* TIPS WIDGET - RIGHT SIDE */
+.cosmic-tips-widget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 220px;
+    background: rgba(20, 30, 20, 0.95);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+    z-index: 9999;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.cosmic-tips-widget.minimized {
+    width: 60px;
+    border-radius: 30px;
+}
+
+.cosmic-tips-widget.minimized .header-text,
+.cosmic-tips-widget.minimized .header-count {
+    display: none;
+}
+
+.tips-widget-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    cursor: pointer;
+    gap: 8px;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.header-icon {
+    width: 30px;
+    height: 30px;
+    background: #4CAF50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.header-icon i {
+    color: white;
+    font-size: 14px;
+}
+
+.header-text {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+}
+
+.header-count {
+    background: rgba(255,255,255,0.1);
+    padding: 2px 6px;
+    border-radius: 20px;
+    font-size: 11px;
+    color: #4CAF50;
+}
+
+.header-toggle {
+    color: #4CAF50;
+    font-size: 12px;
+    width: 20px;
+    text-align: center;
+}
+
+.tips-widget-content {
+    padding: 12px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.tip-of-day-compact {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 12px;
+}
+
+.tip-of-day-icon {
+    font-size: 24px;
+    width: 30px;
+    text-align: center;
+}
+
+.tip-of-day-compact-text {
+    flex: 1;
+}
+
+.tip-of-day-category {
+    display: block;
+    font-size: 9px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+.tip-of-day-message {
+    font-size: 11px;
+    color: white;
+    line-height: 1.3;
+}
+
+.tips-categories-compact {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.category-pill {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    color: #ccc;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.category-pill.active {
+    background: #4CAF50;
+    color: white;
+    border-color: white;
+}
+
+.tips-list-compact {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.tip-item-compact {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.tip-icon {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.tip-text {
+    font-size: 11px;
+    color: #ccc;
+    flex: 1;
+    line-height: 1.3;
+}
+
+.new-tip-btn {
+    width: 100%;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* MODAL */
+.harvest-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.harvest-modal-content {
+    background: #1a2a1a;
+    border: 1px solid #4CAF50;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 300px;
+}
+
+.harvest-modal-header {
+    padding: 15px;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.harvest-modal-header h3 {
+    color: white;
+    font-size: 16px;
+    margin: 0;
+}
+
+.harvest-modal-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.harvest-modal-body {
+    padding: 15px;
+}
+
+.harvest-modal-body input,
+.harvest-modal-body select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+}
+
+.save-harvest-btn {
+    width: 100%;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* MOBILE OPTIMIZATION */
+@media (max-width: 480px) {
+    .cosmic-harvest-widget {
+        bottom: 10px;
+        left: 10px;
+    }
+    
+    .cosmic-tips-widget {
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    .cosmic-harvest-widget.minimized,
+    .cosmic-tips-widget.minimized {
+        width: 50px;
+    }
+    
+    .harvest-header-icon,
+    .header-icon {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .harvest-header-icon i,
+    .header-icon i {
+        font-size: 12px;
+    }
+}
